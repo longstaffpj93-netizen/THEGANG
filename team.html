@@ -57,18 +57,89 @@
             margin-top: 40px;
         }
         .member {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
             border: 2px solid #ffd700;
-            border-radius: 12px;
+            border-radius: 15px;
             padding: 30px;
             text-align: center;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
+
         .member:hover {
-            transform: translateY(-10px);
-            border-color: #ffd700;
-            box-shadow: 0 15px 40px rgba(255,215,0,0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+            border-color: #fff;
         }
+
+        .contact-info {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 15px 0;
+        }
+
+        .contact-info p {
+            margin: 5px 0;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .services-list {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .services-list h4 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .service-item:last-child {
+            border-bottom: none;
+        }
+
+        .service-name {
+            color: #e0e0e0;
+            font-size: 0.9rem;
+        }
+
+        .service-price {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .note {
+            background: rgba(255,215,0,0.1);
+            border-left: 3px solid #ffd700;
+            padding: 10px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .note p {
+            color: #ffd700;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
         .photo-placeholder {
             width: 160px;
             height: 160px;
@@ -137,6 +208,74 @@
 
     <div class="container">
         <div class="team-grid">
+            <!-- C Automotive Designs -->
+            <div class="member">
+                <div class="photo-placeholder">🎨 C Automotive</div>
+                <div class="name">C AUTOMOTIVE DESIGNS</div>
+                <div class="role">Vehicle Services & Customization</div>
+                <div class="contact-info">
+                    <p>📱 07886 3138641</p>
+                    <p>📸 @C_AUTOMOTIVE_DESIGNS</p>
+                </div>
+                <p>Professional vehicle customization specialist. Full car wraps, partial wraps, custom designs, de-chroming, caliper painting, light tinting, interior wraps, starlights, and repairs. Premium quality with attention to detail.</p>
+                
+                <div class="services-list">
+                    <h4>Services & Pricing:</h4>
+                    <div class="service-item">
+                        <span class="service-name">Full Car Wrap</span>
+                        <span class="service-price">£1200 - £1600</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Part Car Wrap</span>
+                        <span class="service-price">£600 - £800</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Vehicle Design</span>
+                        <span class="service-price">£600 - £800</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Sign Writing</span>
+                        <span class="service-price">£300</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">De-Chrome</span>
+                        <span class="service-price">£150</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Caliper Paint</span>
+                        <span class="service-price">£130</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Light Tint</span>
+                        <span class="service-price">£50 per set</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Interior Wrap</span>
+                        <span class="service-price">£150</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Starlights</span>
+                        <span class="service-price">£360</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Sunstrip</span>
+                        <span class="service-price">£40</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Personalised Stickers (30×60)</span>
+                        <span class="service-price">£15</span>
+                    </div>
+                    <div class="service-item">
+                        <span class="service-name">Repairs From</span>
+                        <span class="service-price">£50</span>
+                    </div>
+                </div>
+                
+                <div class="note">
+                    <p><strong>Please provide a picture of your vehicle for accurate pricing. Prices may vary based on vehicle size and selection.</strong></p>
+                </div>
+            </div>
+
             <!-- Vinyl Wrapper -->
             <div class="member">
                 <div class="photo-placeholder">🎵 Vinyl Work</div>
