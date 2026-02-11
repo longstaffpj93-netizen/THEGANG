@@ -141,8 +141,8 @@
         }
 
         .photo-placeholder {
-            width: 160px;
-            height: 160px;
+            width: 120px;
+            height: 120px;
             background: #333;
             border-radius: 50%;
             margin: 0 auto 20px;
@@ -152,7 +152,8 @@
             font-size: 1.1rem;
             overflow: hidden;
             position: relative;
-            min-height: 160px;
+            min-height: 120px;
+            animation: dropDown 0.8s ease-in-out;
         }
 
         .photo-placeholder img {
@@ -164,8 +165,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            max-width: 160px;
-            max-height: 160px;
+            max-width: 120px;
+            max-height: 120px;
         }
 
         .name {
@@ -237,6 +238,17 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes dropDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
     </style>
