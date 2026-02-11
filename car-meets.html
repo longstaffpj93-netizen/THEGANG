@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Essex Car Meets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial Black', Arial, sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('background.jpg') center/cover fixed;
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Hero with logo image only – no text overlay */
+        .hero {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-logo {
+            width: 400px;
+            height: 400px;
+            background: url('THE_GANG_logo.png') center/contain no-repeat;
+            opacity: 0.8;
+            z-index: 2;
+            object-fit: contain;
+            filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8));
+        }
+
+        /* Tagline now below hero */
+        .title-section {
+            background: rgba(0,0,0,0.8);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        .main-title {
+            font-size: clamp(3rem, 10vw, 6rem);
+            color: #ffd700;
+            letter-spacing: 6px;
+            text-shadow: 3px 3px 10px #000;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: clamp(1.8rem, 5vw, 3.2rem);
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #ffd700;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 60px;
+            font-size: 1.15rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .meets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 35px;
+            margin-top: 30px;
+        }
+
+        .meet-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid #ffd700;
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.12), transparent);
+            transition: left 0.6s;
+        }
+
+        .meet-card:hover::before {
+            left: 100%;
+        }
+
+        .meet-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 50px rgba(255,215,0,0.35);
+            border-color: #ffd700;
+        }
+
+        .meet-date {
+            display: inline-block;
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            font-size: 1rem;
+            color: #000;
+        }
+
+        .meet-title {
+            font-size: 1.9rem;
+            margin-bottom: 16px;
+            color: #ffd700;
+        }
+
+        .meet-location, .meet-time {
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+            opacity: 0.9;
+        }
+
+        .meet-details {
+            opacity: 0.85;
+            margin-top: 18px;
+        }
+
+        .nav-buttons {
+            text-align: center;
+            margin: 40px 0 60px;
+            font-size: 1.3rem;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-family: 'Arial Black', Arial, sans-serif;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-btn:hover {
+            background: #ffd700;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,215,0,0.3);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 50px 20px;
+            margin-top: 80px;
+            border-top: 3px solid #ffd700;
+            opacity: 0.75;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: 55vh;
+                min-height: 400px;
+            }
+            .main-title {
+                font-size: clamp(2.5rem, 9vw, 4.5rem);
+            }
+            .tagline {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+            }
+            .meets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .meet-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid #ffd700;
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .meet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.12), transparent);
+            transition: left 0.6s;
+        }
+
+        .meet-card:hover::before {
+            left: 100%;
+        }
+
+        .meet-date {
+            background: #ffd700;
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .meet-title {
+            color: #ffd700;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 8px #000;
+        }
+
+        .meet-location {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .meet-time {
+            color: #ffd700;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .meet-details {
+            color: #e0e0e0;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .meets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .nav-buttons {
+            text-align: center;
+            margin: 40px 0 60px;
+            font-size: 1.3rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid #ffd700;
+            color: #ffd700;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-family: 'Arial Black', Arial, sans-serif;
+            text-decoration: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        .nav-btn:hover {
+            background: #ffd700;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255,215,0,0.4);
+        }
+
+        .intro {
+            background: rgba(0,0,0,0.8);
+            padding: 40px 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border: 1px solid #333;
+        }
+
+        .intro p {
+            margin-bottom: 20px;
+        }
+
+        .intro strong {
+            color: #ffd700;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0,0,0,0.9);
+            border-top: 2px solid #ffd700;
+            margin-top: 60px;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: 50vh;
+                min-height: 400px;
+            }
+            .hero-logo {
+                width: 250px;
+                height: 250px;
+            }
+            h1 {
+                font-size: clamp(2.5rem, 9vw, 4.5rem);
+            }
+            .tagline {
+                font-size: clamp(1.5rem, 6vw, 2.5rem);
+            }
+            .meets-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <div class="container">
+        <!-- Hero: just the logo -->
+        <div class="hero">
+            <div class="hero-logo"></div>
+        </div>
+
+        <!-- Quick nav -->
+        <div class="nav-buttons">
+            <a href="merch.html" class="nav-btn">🛍️ Merch Store</a>
+            <a href="team.html" class="nav-btn">👥 Meet the Team</a>
+        </div>
+
+        <div class="intro">
+            <p>Welcome to <strong>THE GANG</strong> — Essex's premier car enthusiast community. We bring together petrolheads from across the county for epic meets, cruises, and vibes. All makes, models, and styles welcome — modified, classic, JDM, supercars, you name it.</p>
+            <p>Check out our lineup for the next couple of months (Feb–April 2026). Dates subject to weather/organiser updates — follow our socials for last-minute changes, cancellations, or extra pop-ups.</p>
+        </div>
+
+        <div class="meets-grid">
+
+            <!-- Original + adjusted for current date (11 Feb 2026) -->
+            <div class="meet-card">
+                <div class="meet-date">FRI 13 FEB 2026</div>
+                <h2 class="meet-title">Chelmsford Friday Night</h2>
+                <div class="meet-location">📍 Riverside Retail Park, Chelmsford</div>
+                <div class="meet-time">⏰ 8:00 PM – 11:00 PM</div>
+                <div class="meet-details">
+                    Weekly Friday night hangout for the Chelmsford crew. Relaxed vibes, quality motors, coffee, and late-night chats. Perfect kick-off after mid-week.
+                </div>
+            </div>
+
+            <div class="meet-card">
+                <div class="meet-date">SAT 14 FEB 2026</div>
+                <h2 class="meet-title">Lakeside Valentine's Meet</h2>
+                <div class="meet-location">📍 Lakeside Shopping Centre Car Park, West Thurrock</div>
+                <div class="meet-time">⏰ 6:00 PM – 10:00 PM</div>
+                <div class="meet-details">
+                    Special Valentine's edition of our biggest monthly spot. Bring your ride (and maybe your other half). Food vendors, music, and good energy expected.
+                </div>
+            </div>
+
+            <div class="meet-card">
+                <div class="meet-date">SUN 15 FEB 2026</div>
+                <h2 class="meet-title">Southend Seafront Sunday</h2>
+                <div class="meet-location">📍 Southend-on-Sea Seafront, Marine Parade</div>
+                <div class="meet-time">⏰ 10:00 AM – 2:00 PM</div>
+                <div class="meet-details">
+                    Classic Sunday cruise along the seafront. Epic photo ops with the pier and estuary backdrop. Clean rides shine here.
+                </div>
+            </div>
+
+            <!-- New/expanded meets for Feb–April -->
+            <div class="meet-card">
+                <div class="meet-date">FRI 20 FEB 2026</div>
+                <h2 class="meet-title">Chelmsford Friday Night</h2>
+                <div class="meet-location">📍 Riverside Retail Park, Chelmsford</div>
+                <div class="meet-time">⏰ 8:00 PM – 11:00 PM</div>
+                <div class="meet-details">
+                    Another weekly Chelmsford session — consistent spot for the locals. Come show off recent mods or just chill.
+                </div>
+            </div>
+
+            <div class="meet-card">
+                <div class="meet-date">SAT 21 FEB 2026</div>
+                <h2 class="meet-title">Colchester Castle Cruise</h2>
+                <div class="meet-location">📍 Colchester Castle Park, Castle Park</div>
+                <div class="meet-time">⏰ 12:00 PM – 4:00 PM</div>
+                <div class="meet-details">
+                    Daytime family-friendly meet in historic grounds. Static displays, scenic cruise around North Essex roads.
+                </div>
+            </div>
+
+            <div class="meet-card">
+                <div class="meet-date">SUN 01 MAR 2026</div>
+                <h2 class="meet-title">ECM Season Opener @ Chelmsford City Racecourse</h2>
+                <div class="meet-location">📍 Chelmsford City Racecourse</div>
+                <div class="meet-time">⏰ 10:00 AM – 4:00 PM</div>
+                <div class="meet-details">
+                    Big season kick-off event! Massive turnout expected — trade stands, special guests, track views, and proper Essex energy.
+                </div>
+            </div>
+
+            <div class="meet-card">
+                <div class="meet-date">SAT 07 MAR 2026</div>
+                <h2 class="meet-title">Basildon Mega Meet</h2>
+                <div class="meet-location">📍 Festival Leisure Park, Basildon</div>
+                <div class="meet-time">⏰ 6:00 PM – 11:00 PM</div>
+                <div class="meet-details">
+                    Monthly legend returns. DJ, competitions, giveaways, huge turnout. First Saturday vibes.
+                </div>
+            </div>
+
+            <div class="meet-card">
+                <div class="meet-date">SUN 22 MAR 2026</div>
+                <h2 class="meet-title">Lodge Coaches Car Show & Autojumble</h2>
+                <div class="meet-location">📍 Lodge Coaches, Essex (check socials for exact)</div>
+                <div class="meet-time">⏰ 10:00 AM – 2:00 PM</div>
+                <div class="meet-details">
+                    Classic show with autojumble — parts, bargains, and static displays. Great for builders and browsers.
+                </div>
+            </div>
+
+            <div class="meet-card">
+                <div class="meet-date">FRI 03 APR 2026</div>
+                <h2 class="meet-title">Epping Forest Night Run</h2>
+                <div class="meet-location">📍 High Beach Car Park, Epping Forest</div>
+                <div class="meet-time">⏰ 7:00 PM – 10:00 PM</div>
+                <div class="meet-details">
+                    Evening cruise through the forest roads. Meet at High Beach, then scenic drive. Wrap up with food/coffee.
+                </div>
+            </div>
+
+            <div class="meet-card">
+                <div class="meet-date">SAT 04 APR 2026</div>
+                <h2 class="meet-title">Lakeside April Meet</h2>
+                <div class="meet-location">📍 Lakeside Shopping Centre Car Park, West Thurrock</div>
+                <div class="meet-time">⏰ 6:00 PM – 10:00 PM</div>
+                <div class="meet-details">
+                    Spring edition of the iconic Lakeside gathering. Warmer nights, bigger crowds, all welcome.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>THE GANG — Bringing Essex car culture together since day one.</p>
+        <p>Follow for real-time updates, weather calls & surprise pop-up meets.</p>
+        <p style="margin-top: 25px; font-size: 0.9em;">
+            Webpage by PJ Longstaff | Run by Courbon Longstaff
+        </p>
+    </div>
+
+</body>
+</html>
