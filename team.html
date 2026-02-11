@@ -179,28 +179,34 @@
             margin-bottom: 15px;
         }
         .nav-buttons {
-            text-align: center;
-            margin: 60px 0;
             display: flex;
             justify-content: center;
             gap: 20px;
-            flex-wrap: wrap;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
         }
 
         .nav-btn {
             background: transparent;
             border: 2px solid #ffd700;
             color: #ffd700;
-            padding: 12px 24px;
-            font-size: 1.1rem;
+            padding: 12px 25px;
+            font-size: 1rem;
             font-weight: bold;
             font-family: 'Arial Black', Arial, sans-serif;
+            text-decoration: none;
             border-radius: 8px;
             cursor: pointer;
-            text-decoration: none;
             transition: all 0.3s;
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: inline-block;
+            margin: 5px;
         }
 
         .nav-btn:hover {
@@ -371,8 +377,8 @@
             <!-- Add more team members here when ready -->
         </div>
 
-        <!-- Bottom Clean Navigation -->
-        <div class="clean-nav bottom">
+        <!-- Bottom Navigation -->
+        <div class="nav-buttons bottom">
             <a href="car-meets.html" class="nav-btn">🏠 Home</a>
             <a href="merch.html" class="nav-btn">🛍️ Merch</a>
             <a href="team.html" class="nav-btn">👥 Team</a>
