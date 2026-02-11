@@ -917,7 +917,15 @@
             const card = btn.closest('.product-card');
             const name = card.querySelector('.product-name').textContent;
             const price = parseFloat(card.querySelector('.product-price').textContent.replace('£', ''));
-            const size = card.querySelector('.size-btn.active').dataset.size;
+            const sizeBtn = card.querySelector('.size-btn.active');
+            
+            // Check if size is selected
+            if (!sizeBtn) {
+                alert('Please select a size!');
+                return;
+            }
+            
+            const size = sizeBtn.dataset.size;
             const quantity = parseInt(card.querySelector('.quantity-input').value);
             const total = price * quantity;
             
@@ -957,16 +965,25 @@
             cartItems.innerHTML = '';
             let total = 0;
             
-            cart.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'cart-item';
-                itemDiv.innerHTML = `
-                    <span>${item.name} (Size: ${item.size}, Qty: ${item.quantity})</span>
-                    <span>£${item.total.toFixed(2)}</span>
-                `;
-                cartItems.appendChild(itemDiv);
-                total += item.total;
-            });
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Your cart is empty</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'cart-item';
+                    itemDiv.innerHTML = `
+                        <div style="flex: 1;">
+                            <span>${item.name} (Size: ${item.size}, Qty: ${item.quantity})</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span>£${item.total.toFixed(2)}</span>
+                            <button onclick="removeFromCart(${index})" style="background: #ff4444; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px;">×</button>
+                        </div>
+                    `;
+                    cartItems.appendChild(itemDiv);
+                    total += item.total;
+                });
+            }
             
             cartTotal.textContent = total.toFixed(2);
         }
@@ -1033,6 +1050,18 @@
             
             stripeContainer.innerHTML = '';
             stripeContainer.appendChild(stripeButton);
+        }
+
+        // Clear Cart Function
+        function clearCart() {
+            cart = [];
+            updateCart();
+        }
+
+        // Remove Item from Cart
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
         }
         <!-- Bottom Clean Navigation -->
         <div class="clean-nav bottom">
