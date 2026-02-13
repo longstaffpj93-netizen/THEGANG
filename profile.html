@@ -624,10 +624,20 @@
             // Update header
             document.getElementById('avatar-text').textContent = currentUser.name.charAt(0).toUpperCase();
             document.getElementById('profile-name').textContent = currentUser.name;
-            document.getElementById('profile-email').textContent = currentUser.email;
+            
+            // Update bio display
+            const bioDisplay = document.getElementById('profile-bio');
+            if (bioDisplay) {
+                bioDisplay.textContent = currentUser.profile?.bio || 'Passionate car enthusiast and member of the Most Wanted Essex community.';
+            }
             
             const joinDate = new Date(currentUser.joinDate);
-            document.getElementById('profile-join-date').textContent = `Member since ${joinDate.toLocaleDateString()}`;
+            
+            // Update member since
+            const memberSince = document.getElementById('member-since');
+            if (memberSince) {
+                memberSince.textContent = joinDate.toLocaleDateString();
+            }
 
             // Load profile picture if exists
             if (currentUser.profile?.profilePic) {
@@ -647,6 +657,33 @@
 
             const daysMember = Math.floor((Date.now() - joinDate) / (1000 * 60 * 60 * 24));
             document.getElementById('member-days').textContent = daysMember;
+            
+            // Update profile details
+            const customization = currentUser.profile?.customization || {};
+            
+            // Favorite brand
+            if (customization.favoriteBrand) {
+                document.getElementById('favorite-brand-item').style.display = 'flex';
+                document.getElementById('favorite-brand-value').textContent = customization.favoriteBrand;
+            }
+            
+            // Driving style
+            if (customization.drivingStyle) {
+                document.getElementById('driving-style-item').style.display = 'flex';
+                document.getElementById('driving-style-value').textContent = customization.drivingStyle;
+            }
+            
+            // Location
+            if (customization.location) {
+                document.getElementById('location-item').style.display = 'flex';
+                document.getElementById('location-value').textContent = customization.location;
+            }
+            
+            // Instagram
+            if (customization.instagram) {
+                document.getElementById('instagram-item').style.display = 'flex';
+                document.getElementById('instagram-value').textContent = customization.instagram;
+            }
 
             // Load cars
             loadCars();
@@ -1044,29 +1081,27 @@
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-avatar">
-                ${user.profile?.profilePic ? 
-                    `<img src="${user.profile.profilePic}" alt="${user.name}">` : 
-                    user.name.charAt(0).toUpperCase()
-                }
+                <div id="avatar-text" class="avatar-text">?</div>
+                <img id="profile-pic" style="display: none;" alt="Profile Picture">
             </div>
-            <div class="profile-name">${user.name}</div>
+            <div class="profile-name" id="profile-name">Loading...</div>
             <div class="profile-role">Most Wanted Member</div>
-            <div class="profile-bio">
-                ${user.profile?.bio || 'Passionate car enthusiast and member of the Most Wanted Essex community.'}
+            <div class="profile-bio" id="profile-bio">
+                Loading bio...
             </div>
         </div>
 
         <div class="profile-stats">
             <div class="stat-card">
-                <div class="stat-number">${user.profile?.cars?.length || 0}</div>
+                <div class="stat-number" id="cars-count">0</div>
                 <div class="stat-label">Cars</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">${Math.floor((Date.now() - new Date(user.joinDate)) / (1000 * 60 * 60 * 24))}</div>
+                <div class="stat-number" id="meets-count">0</div>
                 <div class="stat-label">Days Member</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">${user.profile?.favoriteMeets?.length || 0}</div>
+                <div class="stat-number" id="member-days">0</div>
                 <div class="stat-label">Meets Attended</div>
             </div>
         </div>
@@ -1074,10 +1109,8 @@
         <div class="profile-sections">
             <div class="profile-section">
                 <h2 class="section-title">🚗 My Cars</h2>
-                <ul class="car-list">
-                    ${(user.profile?.cars || ['No cars added yet']).map(car => 
-                        `<li class="car-item">${car}</li>`
-                    ).join('')}
+                <ul class="car-list" id="cars-list">
+                    <li class="car-item">Loading cars...</li>
                 </ul>
             </div>
 
@@ -1085,32 +1118,24 @@
                 <h2 class="section-title">🎨 Profile Details</h2>
                 <div class="customization-item">
                     <span class="customization-label">Member Since:</span>
-                    <span class="customization-value">${new Date(user.joinDate).toLocaleDateString()}</span>
+                    <span class="customization-value" id="member-since">Loading...</span>
                 </div>
-                ${user.profile?.customization?.favoriteBrand ? `
-                    <div class="customization-item">
-                        <span class="customization-label">Favorite Brand:</span>
-                        <span class="customization-value">${user.profile.customization.favoriteBrand}</span>
-                    </div>
-                ` : ''}
-                ${user.profile?.customization?.drivingStyle ? `
-                    <div class="customization-item">
-                        <span class="customization-label">Driving Style:</span>
-                        <span class="customization-value">${user.profile.customization.drivingStyle}</span>
-                    </div>
-                ` : ''}
-                ${user.profile?.customization?.location ? `
-                    <div class="customization-item">
-                        <span class="customization-label">Location:</span>
-                        <span class="customization-value">${user.profile.customization.location}</span>
-                    </div>
-                ` : ''}
-                ${user.profile?.customization?.instagram ? `
-                    <div class="customization-item">
-                        <span class="customization-label">Instagram:</span>
-                        <span class="customization-value">${user.profile.customization.instagram}</span>
-                    </div>
-                ` : ''}
+                <div class="customization-item" id="favorite-brand-item" style="display: none;">
+                    <span class="customization-label">Favorite Brand:</span>
+                    <span class="customization-value" id="favorite-brand-value">-</span>
+                </div>
+                <div class="customization-item" id="driving-style-item" style="display: none;">
+                    <span class="customization-label">Driving Style:</span>
+                    <span class="customization-value" id="driving-style-value">-</span>
+                </div>
+                <div class="customization-item" id="location-item" style="display: none;">
+                    <span class="customization-label">Location:</span>
+                    <span class="customization-value" id="location-value">-</span>
+                </div>
+                <div class="customization-item" id="instagram-item" style="display: none;">
+                    <span class="customization-label">Instagram:</span>
+                    <span class="customization-value" id="instagram-value">-</span>
+                </div>
             </div>
         </div>
 
