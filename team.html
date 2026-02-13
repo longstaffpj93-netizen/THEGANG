@@ -70,6 +70,69 @@
             overflow: hidden;
         }
 
+        .profile-link {
+            text-decoration: none;
+            display: block;
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+        }
+
+        .profile-icon {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255,215,0,0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255,215,0,0.6);
+        }
+
+        .profile-initial {
+            z-index: 2;
+            position: relative;
+        }
+
+        .profile-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 50%;
+            z-index: 3;
+        }
+
+        .profile-overlay span {
+            color: #ffd700;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .profile-link:hover .profile-overlay {
+            opacity: 1;
+        }
+
         .member:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(255,215,0,0.3);
@@ -301,145 +364,24 @@
 
     <div class="container">
         <div class="team-grid">
-            <!-- Courbon Longstaff -->
+            <!-- Team Member Profile -->
             <div class="member">
                 <div class="photo-placeholder">
-                    <img src="assets/images/pjprofile.jpg" alt="Courbon Longstaff" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                </div>
-                <div class="name">Courbon Longstaff</div>
-                <div class="role">Team Lead</div>
-                <p>Founder and team coordinator. Organizes meets, manages community, and ensures THE GANG maintains highest standards in Essex car scene.</p>
-            </div>
-
-            <!-- PJ Longstaff -->
-            <div class="member">
-                <div class="photo-placeholder">
-                    <img src="assets/images/pjprofile.jpg" alt="PJ Longstaff" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <a href="profile.html" class="profile-link">
+                        <div class="profile-icon">
+                            <span class="profile-initial">PJ</span>
+                        </div>
+                        <div class="profile-overlay">
+                            <span>View Profile</span>
+                        </div>
+                    </a>
                 </div>
                 <div class="name">PJ Longstaff</div>
                 <div class="role">Web & Media</div>
-                <div class="services-list">
-                    <h4>Services & Pricing:</h4>
-                    <div class="service-item">
-                        <span class="service-name">Website Development</span>
-                        <span class="service-price">£500 - £2000</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Photography</span>
-                        <span class="service-price">£200 - £500</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Video Production</span>
-                        <span class="service-price">£300 - £800</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Social Media Management</span>
-                        <span class="service-price">£150 - £400/month</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Graphic Design</span>
-                        <span class="service-price">£50 - £300</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Event Coverage</span>
-                        <span class="service-price">£250 - £600</span>
-                    </div>
-                </div>
-                <p>Built this site, handles graphics, captures the meets, and manages THE GANG's online presence. Creating professional content for Essex car community.</p>
+                <p>Founder and lead developer of Most Wanted. Building the Essex car community platform and creating professional content for car enthusiasts across the county.</p>
             </div>
+        </div>
+    </div>
 
-            <!-- C Automotive Designs -->
-            <div class="member">
-                <div class="photo-placeholder">
-                    <img src="carly.jpeg" alt="C AUTOMOTIVE DESIGNS" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                </div>
-                <div class="name">C AUTOMOTIVE DESIGNS</div>
-                <div class="role">Vehicle Services & Customization</div>
-                <div class="contact-info">
-                    <p>📱 07863 137541</p>
-                    <p>📸 @C_AUTOMOTIVE_DESIGNS</p>
-                </div>
-                <p>Professional vehicle customization specialist. Full car wraps, partial wraps, custom designs, de-chroming, caliper painting, light tinting, interior wraps, starlights, and repairs. Premium quality with attention to detail.</p>
-                
-                <div class="services-list">
-                    <h4>Services & Pricing:</h4>
-                    <div class="service-item">
-                        <span class="service-name">Full Car Wrap</span>
-                        <span class="service-price">£1200 - £1600</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Part Car Wrap</span>
-                        <span class="service-price">£600 - £800</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Vehicle Design</span>
-                        <span class="service-price">£600 - £800</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Sign Writing</span>
-                        <span class="service-price">£300</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">De-Chrome</span>
-                        <span class="service-price">£150</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Caliper Paint</span>
-                        <span class="service-price">£130</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Light Tint</span>
-                        <span class="service-price">£50 per set</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Interior Wrap</span>
-                        <span class="service-price">£150</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Starlights</span>
-                        <span class="service-price">£360</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Sunstrip</span>
-                        <span class="service-price">£40</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Personalised Stickers (30×60)</span>
-                        <span class="service-price">£15</span>
-                    </div>
-                    <div class="service-item">
-                        <span class="service-name">Repairs From</span>
-                        <span class="service-price">£50</span>
-                    </div>
-                </div>
-                
-                <div class="note">
-                    <p><strong>Please provide a picture of your vehicle for accurate pricing. Prices may vary based on vehicle size and selection.</strong></p>
-                </div>
-            </div>
-
-            <!-- Vinyl Wrapper -->
-            <div class="member">
-                <div class="photo-placeholder">🎵 Vinyl Work</div>
-                <div class="name">Your Name Here</div>
-                <div class="role">Vinyl Wrapper</div>
-                <p>Professional vinyl wrapping specialist. Custom designs, color changes, and protection for your ride. Making Essex cars stand out with premium materials and expert application.</p>
-            </div>
-
-            <!-- Neon Light Fitter -->
-            <div class="member">
-                <div class="photo-placeholder">💡 Neon Install</div>
-                <div class="name">Your Name Here</div>
-                <div class="role">Neon Light Fitter</div>
-                <p>Custom neon underglow and accent lighting. Professional installation with warranty. Making THE GANG members' cars glow at night with premium LED kits and expert wiring.</p>
-            </div>
-
-            <!-- Marketing -->
-            <div class="member">
-                <div class="photo-placeholder">📈 Marketing</div>
-                <div class="name">Your Name Here</div>
-                <div class="role">Marketing</div>
-                <p>Handles social media, promotions, and partnerships. Spreads the word about THE GANG and its activities, attracting new members and sponsors.</p>
-            </div>
 
 </html>
