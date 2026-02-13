@@ -143,7 +143,8 @@
             
             if (countdown <= 0) {
                 clearInterval(timer);
-                window.location.href = 'car-meets.html';
+                // Don't auto-redirect, let users choose
+                countdownEl.textContent = 'Choose your destination';
             }
         }, 1000);
     </script>
