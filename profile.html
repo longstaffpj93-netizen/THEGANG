@@ -778,6 +778,15 @@
 
         // Update user in database
         function updateUserInDatabase() {
+            // Get current user from localStorage to ensure we have the latest data
+            const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
+            if (!currentUser) {
+                console.log('No current user found in updateUserInDatabase');
+                return;
+            }
+            
+            console.log('Updating user in database:', currentUser.name);
+            
             const users = JSON.parse(localStorage.getItem('mostWantedUsers') || '[]');
             const userIndex = users.findIndex(u => u.id === currentUser.id);
             
@@ -1295,8 +1304,21 @@ function loadCustomization() {
 
 // Handle profile picture upload
 function handleProfilePicUpload(event) {
+    // Get current user from localStorage to ensure we have the latest data
+    const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
+    if (!currentUser) {
+        console.log('No current user found for profile picture upload');
+        showMessage('Please login to upload profile picture', 'error', 'customization-message');
+        return;
+    }
+    
+    console.log('Starting profile picture upload for user:', currentUser.name);
+    
     const file = event.target.files[0];
-    if (!file) return;
+    if (!file) {
+        console.log('No file selected for profile picture upload');
+        return;
+    }
 
     if (!file.type.startsWith('image/')) {
         showMessage('Please select an image file', 'error', 'customization-message');
@@ -1337,8 +1359,21 @@ function handleProfilePicUpload(event) {
 
 // Handle profile image uploads
 function handleProfileImageUpload(event, imageNumber) {
+    // Get current user from localStorage to ensure we have the latest data
+    const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
+    if (!currentUser) {
+        console.log('No current user found for gallery image upload');
+        showMessage('Please login to upload images', 'error', 'gallery-message');
+        return;
+    }
+    
+    console.log('Starting gallery image upload for user:', currentUser.name, 'image:', imageNumber);
+    
     const file = event.target.files[0];
-    if (!file) return;
+    if (!file) {
+        console.log('No file selected for gallery image upload');
+        return;
+    }
 
     if (!file.type.startsWith('image/')) {
         showMessage('Please select an image file', 'error', 'gallery-message');
@@ -1392,8 +1427,21 @@ function handleProfileImageUpload(event, imageNumber) {
 
 // Handle header image upload
 function handleHeaderImageUpload(event) {
+    // Get current user from localStorage to ensure we have the latest data
+    const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
+    if (!currentUser) {
+        console.log('No current user found for header image upload');
+        showMessage('Please login to upload header image', 'error', 'gallery-message');
+        return;
+    }
+    
+    console.log('Starting header image upload for user:', currentUser.name);
+    
     const file = event.target.files[0];
-    if (!file) return;
+    if (!file) {
+        console.log('No file selected for header image upload');
+        return;
+    }
 
     if (!file.type.startsWith('image/')) {
         showMessage('Please select an image file', 'error', 'gallery-message');
