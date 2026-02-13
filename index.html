@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Most Wanted - Essex Car Community</title>
+    <script src="auth-check.js"></script>
     <style>
         body {
             margin: 0;
@@ -154,51 +155,59 @@
     </style>
 </head>
 <body>
-    <div class="clean-nav">
-        <a href="index.html" class="nav-btn">🏠 Home</a>
-        <a href="car-meets.html" class="nav-btn">🚗 Car Meets</a>
-        <a href="merch.html" class="nav-btn">🛍️ Merch</a>
-        <a href="team.html" class="nav-btn">👥 Team</a>
-        <a href="feed.html" class="nav-btn">📢 Feed</a>\n        <a href="auth.html" class="nav-btn">👤 Login / Sign Up</a>
-    </div>
-
     <div class="redirect-container">
         <h1>🚗 Most Wanted</h1>
         <p>Essex's Premier Car Community</p>
-        <div class="countdown" id="countdown">Choose your destination</div>
+        <div class="countdown" id="countdown">Please login to continue</div>
         <div class="features">
             <div class="feature">
-                <span class="feature-icon">🚗</span>
-                <span class="feature-text">Car Meets & Events</span>
+                <span class="feature-icon">�</span>
+                <span class="feature-text">Private Community</span>
             </div>
             <div class="feature">
-                <span class="feature-icon">🛍️</span>
-                <span class="feature-text">Official Merchandise</span>
-            </div>
-            <div class="feature">
-                <span class="feature-icon">👤</span>
+                <span class="feature-icon">�</span>
                 <span class="feature-text">Member Profiles</span>
             </div>
             <div class="feature">
-                <span class="feature-icon">👥</span>
-                <span class="feature-text">Community Team</span>
+                <span class="feature-icon">�</span>
+                <span class="feature-text">Community Feed</span>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">�️</span>
+                <span class="feature-text">Official Merch</span>
             </div>
         </div>
+    </div>
     
     <script>
-        let countdown = 5;
-        const countdownEl = document.getElementById('countdown');
-        
-        const timer = setInterval(() => {
-            countdown--;
-            countdownEl.textContent = countdown;
-            
-            if (countdown <= 0) {
-                clearInterval(timer);
-                // Don't auto-redirect, let users choose
-                countdownEl.textContent = 'Choose your destination';
+        document.addEventListener('DOMContentLoaded', function() {
+            // If user is already logged in, redirect to feed
+            if (isAuthenticated()) {
+                window.location.href = 'feed.html';
+            } else {
+                // Show countdown and redirect to auth
+                startCountdown();
+                setTimeout(() => {
+                    window.location.href = 'auth.html';
+                }, 6000);
             }
-        }, 1000);
+        });
+        
+        // Start countdown
+        function startCountdown() {
+            let countdown = 5;
+            const countdownEl = document.getElementById('countdown');
+            
+            const timer = setInterval(() => {
+                countdown--;
+                countdownEl.textContent = countdown;
+                
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    countdownEl.textContent = 'Redirecting to login...';
+                }
+            }, 1000);
+        }
     </script>
 </body>
 </html>
