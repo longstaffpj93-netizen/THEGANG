@@ -17,8 +17,8 @@ function getCurrentPage() {
 // Redirect to auth if not authenticated
 function requireAuth() {
     if (!isAuthenticated()) {
-        // Use absolute path to ensure proper redirect
-        window.location.href = '/THEGANG/auth.html';
+        // Use relative path for GitHub Pages
+        window.location.href = 'auth.html';
         return false;
     }
     return true;
@@ -33,8 +33,8 @@ function checkAuthentication() {
     
     // If not authenticated and not on a public page, redirect to auth
     if (!isAuthenticated() && !publicPages.includes(currentPage)) {
-        // Use absolute path to ensure proper redirect
-        window.location.href = '/THEGANG/auth.html';
+        // Use relative path for GitHub Pages
+        window.location.href = 'auth.html';
         return false;
     }
     
@@ -71,34 +71,34 @@ function addLogoutFunctionality() {
         if (nav.children.length === 0) {
             console.log('Navigation is empty, adding navigation links');
             
-            // Add navigation links with absolute paths
+            // Add navigation links with relative paths for GitHub Pages
             const homeBtn = document.createElement('a');
             homeBtn.className = 'nav-btn';
-            homeBtn.href = '/THEGANG/index.html';
+            homeBtn.href = 'index.html';
             homeBtn.textContent = '🏠 Home';
             nav.appendChild(homeBtn);
             
             const carMeetsBtn = document.createElement('a');
             carMeetsBtn.className = 'nav-btn';
-            carMeetsBtn.href = '/THEGANG/car-meets.html';
+            carMeetsBtn.href = 'car-meets.html';
             carMeetsBtn.textContent = '🚗 Car Meets';
             nav.appendChild(carMeetsBtn);
             
             const merchBtn = document.createElement('a');
             merchBtn.className = 'nav-btn';
-            merchBtn.href = '/THEGANG/merch.html';
+            merchBtn.href = 'merch.html';
             merchBtn.textContent = '🛍️ Merch';
             nav.appendChild(merchBtn);
             
             const teamBtn = document.createElement('a');
             teamBtn.className = 'nav-btn';
-            teamBtn.href = '/THEGANG/team.html';
+            teamBtn.href = 'team.html';
             teamBtn.textContent = '👥 Team';
             nav.appendChild(teamBtn);
             
             const feedBtn = document.createElement('a');
             feedBtn.className = 'nav-btn';
-            feedBtn.href = '/THEGANG/feed.html';
+            feedBtn.href = 'feed.html';
             feedBtn.textContent = '📢 Feed';
             nav.appendChild(feedBtn);
             
@@ -149,7 +149,7 @@ function addUserInfoDisplay() {
         `;
         userInfo.innerHTML = `
             <span>👤 ${currentUser.name}</span>
-            <a href="/THEGANG/profile.html" class="profile-link-nav">👤 Profile</a>
+            <a href="profile.html" class="profile-link-nav">👤 Profile</a>
         `;
         nav.appendChild(userInfo);
         console.log('User info added to navigation');
@@ -161,7 +161,7 @@ function addUserInfoDisplay() {
 // Logout function
 function logout() {
     localStorage.removeItem('mostWantedCurrentUser');
-    window.location.href = '/THEGANG/auth.html';
+    window.location.href = 'auth.html';
 }
 
 // Protect specific routes
