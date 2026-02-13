@@ -62,6 +62,49 @@ function addLogoutFunctionality() {
     // Add logout button to navigation
     const nav = document.querySelector('.clean-nav');
     if (nav) {
+        console.log('Navigation found, children count:', nav.children.length);
+        
+        // Check if navigation is empty, if so, add navigation links
+        if (nav.children.length === 0) {
+            console.log('Navigation is empty, adding navigation links');
+            
+            // Add navigation links
+            const homeBtn = document.createElement('a');
+            homeBtn.className = 'nav-btn';
+            homeBtn.href = 'index.html';
+            homeBtn.textContent = '🏠 Home';
+            nav.appendChild(homeBtn);
+            
+            const carMeetsBtn = document.createElement('a');
+            carMeetsBtn.className = 'nav-btn';
+            carMeetsBtn.href = 'car-meets.html';
+            carMeetsBtn.textContent = '🚗 Car Meets';
+            nav.appendChild(carMeetsBtn);
+            
+            const merchBtn = document.createElement('a');
+            merchBtn.className = 'nav-btn';
+            merchBtn.href = 'merch.html';
+            merchBtn.textContent = '🛍️ Merch';
+            nav.appendChild(merchBtn);
+            
+            const teamBtn = document.createElement('a');
+            teamBtn.className = 'nav-btn';
+            teamBtn.href = 'team.html';
+            teamBtn.textContent = '👥 Team';
+            nav.appendChild(teamBtn);
+            
+            const feedBtn = document.createElement('a');
+            feedBtn.className = 'nav-btn';
+            feedBtn.href = 'feed.html';
+            feedBtn.textContent = '📢 Feed';
+            nav.appendChild(feedBtn);
+            
+            console.log('Navigation links added');
+        } else {
+            console.log('Navigation already has content');
+        }
+        
+        // Add logout button
         const logoutBtn = document.createElement('a');
         logoutBtn.className = 'nav-btn logout-btn';
         logoutBtn.href = '#';
@@ -71,6 +114,10 @@ function addLogoutFunctionality() {
             logout();
         };
         nav.appendChild(logoutBtn);
+        
+        console.log('Logout button added');
+    } else {
+        console.log('Navigation not found');
     }
 }
 
