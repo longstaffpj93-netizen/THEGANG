@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Most Wanted - My Profile</title>\n    <script src="auth-check.js"></script>
+    <title>Most Wanted - My Profile</title>
+    <script src="auth-check.js"></script>
+    <script src="asset-manager.js"></script>
     <style>
         body {
             margin: 0;
@@ -1082,19 +1084,23 @@
         </div>
     </div>
 </body>
-</html>`;
+</html>
 
-            // Store in localStorage for dynamic serving
-            const profilePages = JSON.parse(localStorage.getItem('mostWantedProfilePages') || '{}');
-            profilePages[username] = profileContent;
-            localStorage.setItem('mostWantedProfilePages', JSON.stringify(profilePages));
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuth();
+    loadProfile();
+});
+        
+// Initialize asset management
+initializeAssetManagement();
+        
+// Generate individual profile page
+function generateUserProfile() {
+    const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
+    if (!currentUser) return;
             
-            console.log(`Generated profile page for ${user.name}: ${username}-profile.html`);
-        }
-
-        // Handle profile picture upload
-        function handleProfilePicUpload(event) {
-            const file = event.target.files[0];
+    const username = currentUser.name.toLowerCase().replace(/\s+/g, '-');
             if (!file) return;
 
             if (!file.type.startsWith('image/')) {
@@ -1116,6 +1122,9 @@
                     currentUser.profile = {};
                 }
                 currentUser.profile.profilePic = imageData;
+                
+                // Store in user-specific asset management
+                storeUserAsset(currentUser.id, 'profile-pic', imageData);
                 
                 // Update display
                 const profilePic = document.getElementById('profile-pic');
@@ -1190,6 +1199,9 @@
                 location: document.getElementById('essex-location').value
             };
             
+            // Store customization data
+            storeUserAsset(currentUser.id, 'customization', currentUser.profile.customization);
+            
             updateUserInDatabase();
             showMessage('Customization saved successfully!', 'success', 'customization-message');
         }
@@ -1242,6 +1254,9 @@ function handleProfileImageUpload(event, imageNumber) {
         
         currentUser.profile.galleryImages[imageNumber - 1] = imageData;
         
+        // Store in user-specific asset management
+        storeUserAsset(currentUser.id, 'gallery-images', currentUser.profile.galleryImages);
+        
         // Update preview
         const preview = document.getElementById(`profile-image-${imageNumber}-preview`);
         const placeholder = preview.parentElement.querySelector('.image-upload-placeholder');
@@ -1284,6 +1299,9 @@ function handleHeaderImageUpload(event) {
             currentUser.profile = {};
         }
         currentUser.profile.headerImage = imageData;
+        
+        // Store in user-specific asset management
+        storeUserAsset(currentUser.id, 'header-image', imageData);
         
         // Update preview
         const preview = document.getElementById('header-image-preview');
@@ -1374,6 +1392,9 @@ function viewImage(imageData, title) {
 // Load existing images on profile load
 function loadProfileImages() {
     if (!currentUser.profile) return;
+    
+    // Initialize asset management for current user
+    initializeAssetManagement();
     
     // Load header image
     updateHeaderDisplay();
