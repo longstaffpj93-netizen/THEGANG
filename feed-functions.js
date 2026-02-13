@@ -201,6 +201,7 @@ function loadEnhancedFeedPosts(filter = 'all') {
     console.log('Loading feed posts with filter:', filter);
     const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
     console.log('Feed posts found:', feedPosts.length);
+    console.log('Feed posts data:', feedPosts);
     const feedContainer = document.getElementById('feed-posts');
     
     if (!feedContainer) {
@@ -217,6 +218,7 @@ function loadEnhancedFeedPosts(filter = 'all') {
         : sortedPosts.filter(post => post.type === filter);
     
     console.log('Filtered posts:', filteredPosts.length);
+    console.log('Filtered posts data:', filteredPosts);
     
     if (filteredPosts.length === 0) {
         feedContainer.innerHTML = `
@@ -235,6 +237,7 @@ function loadEnhancedFeedPosts(filter = 'all') {
 
 // Create enhanced post HTML with profile shares
 function createEnhancedPostHTML(post) {
+    console.log('Creating post HTML for:', post);
     const date = new Date(post.timestamp);
     const timeAgo = getTimeAgo(date);
     
@@ -254,7 +257,7 @@ function createEnhancedPostHTML(post) {
                         post.authorName.charAt(0).toUpperCase()
                     }
                 </div>
-                <div class="post-meta">
+                <div class="post-info">
                     <div class="post-author">${post.authorName}</div>
                     <div class="post-time">${timeAgo}</div>
                 </div>
@@ -262,25 +265,23 @@ function createEnhancedPostHTML(post) {
             <div class="post-content">${post.content}</div>
             ${post.images && post.images.length > 0 ? `
                 <div class="post-images">
-                    ${post.images.map(image => 
-                        `<img src="${image}" class="post-image" onclick="viewImage('${image}')" alt="Post image">`
+                    ${post.images.map((img, index) => 
+                        `<img src="${img}" alt="Post image ${index + 1}" onclick="viewImage('${img}', 'Post image ${index + 1}')">`
                     ).join('')}
                 </div>
             ` : ''}
             <div class="post-actions">
-                <div class="post-actions-left">
-                    <button class="post-action-btn ${post.liked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
-                        <span>${post.liked ? '❤️' : '🤍'}</span>
-                        <span>${post.likes || 0}</span>
-                    </button>
-                    <button class="post-action-btn" onclick="viewPost('${post.id}')">
-                        <span>💬</span>
-                        <span>${post.comments || 0}</span>
-                    </button>
-                </div>
-                <button class="post-action-btn" onclick="sharePost('${post.id}')">
-                    <span>🔗</span>
-                    <span>Share</span>
+                <button class="like-btn" onclick="toggleLike('${post.id}')">
+                    <span class="like-icon">${post.liked ? '❤️' : '🤍'}</span>
+                    <span class="like-count">${post.likes}</span>
+                </button>
+                <button class="comment-btn" onclick="addComment('${post.id}')">
+                    <span class="comment-icon">💬</span>
+                    <span class="comment-count">${post.comments}</span>
+                </button>
+                <button class="share-btn" onclick="sharePost('${post.id}')">
+                    <span class="share-icon">�</span>
+                    Share
                 </button>
             </div>
         </div>
