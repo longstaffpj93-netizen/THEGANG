@@ -101,6 +101,58 @@
             color: #000;
             font-weight: bold;
             box-shadow: 0 0 20px rgba(255,215,0,0.4);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255,215,0,0.6);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .profile-avatar .avatar-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .profile-avatar:hover .upload-overlay {
+            opacity: 1;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: #ffd700;
+        }
+
+        .profile-pic-input {
+            display: none;
         }
 
         .profile-name {
@@ -307,10 +359,45 @@
             color: #66ff66;
         }
 
-        .error-message {
-            background: rgba(255,0,0,0.2);
-            border: 1px solid #ff4444;
-            color: #ff6666;
+        .achievement-badge {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.2);
+        }
+
+        .achievement-badge.locked {
+            opacity: 0.5;
+            border-color: #666;
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .achievement-name {
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+
+        .achievement-desc {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
         }
     </style>
 </head>
@@ -329,7 +416,14 @@
 
     <div class="profile-container">
         <div class="profile-header">
-            <div class="profile-avatar" id="profile-avatar">U</div>
+            <div class="profile-avatar" id="profile-avatar" onclick="document.getElementById('profile-pic-input').click()">
+                <div class="avatar-text" id="avatar-text">U</div>
+                <div class="upload-overlay">
+                    <div class="upload-icon">📷</div>
+                </div>
+                <img id="profile-pic" style="display: none;" alt="Profile Picture">
+            </div>
+            <input type="file" id="profile-pic-input" class="profile-pic-input" accept="image/*" onchange="handleProfilePicUpload(event)">
             <div class="profile-name" id="profile-name">Loading...</div>
             <div class="profile-email" id="profile-email">Loading...</div>
             <div class="profile-join-date" id="profile-join-date">Loading...</div>
@@ -387,6 +481,71 @@
                     <button type="submit" class="save-btn">Update Settings</button>
                 </form>
             </div>
+
+            <div class="profile-section">
+                <h2 class="section-title">🎨 Profile Customization</h2>
+                <div id="customization-message"></div>
+                
+                <div class="form-group">
+                    <label>Profile Theme</label>
+                    <select id="profile-theme" onchange="updateProfileTheme()">
+                        <option value="gold">Gold (Default)</option>
+                        <option value="blue">Blue Racing</option>
+                        <option value="red">Red Sport</option>
+                        <option value="green">Green Street</option>
+                        <option value="purple">Purple Luxury</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Favorite Car Brand</label>
+                    <input type="text" id="favorite-brand" placeholder="e.g., BMW, Mercedes, Honda">
+                </div>
+
+                <div class="form-group">
+                    <label>Driving Style</label>
+                    <select id="driving-style">
+                        <option value="cruise">Cruise</option>
+                        <option value="sport">Sport</option>
+                        <option value="track">Track</option>
+                        <option value="drift">Drift</option>
+                        <option value="show">Show</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Instagram Handle</label>
+                    <input type="text" id="instagram-handle" placeholder="@yourusername">
+                </div>
+
+                <div class="form-group">
+                    <label>Location in Essex</label>
+                    <input type="text" id="essex-location" placeholder="e.g., Chelmsford, Basildon, Southend">
+                </div>
+
+                <button class="save-btn" onclick="updateCustomization()">Save Customization</button>
+            </div>
+
+            <div class="profile-section">
+                <h2 class="section-title">🏆 Achievements</h2>
+                <div class="achievements-grid">
+                    <div class="achievement-badge">
+                        <div class="achievement-icon">🚗</div>
+                        <div class="achievement-name">First Car</div>
+                        <div class="achievement-desc">Added your first vehicle</div>
+                    </div>
+                    <div class="achievement-badge">
+                        <div class="achievement-icon">👥</div>
+                        <div class="achievement-name">Community Member</div>
+                        <div class="achievement-desc">Joined Most Wanted</div>
+                    </div>
+                    <div class="achievement-badge locked">
+                        <div class="achievement-icon">🏆</div>
+                        <div class="achievement-name">Meet Veteran</div>
+                        <div class="achievement-desc">Attend 5 meets</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -408,12 +567,21 @@
             if (!currentUser) return;
 
             // Update header
-            document.getElementById('profile-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('avatar-text').textContent = currentUser.name.charAt(0).toUpperCase();
             document.getElementById('profile-name').textContent = currentUser.name;
             document.getElementById('profile-email').textContent = currentUser.email;
             
             const joinDate = new Date(currentUser.joinDate);
             document.getElementById('profile-join-date').textContent = `Member since ${joinDate.toLocaleDateString()}`;
+
+            // Load profile picture if exists
+            if (currentUser.profile?.profilePic) {
+                const profilePic = document.getElementById('profile-pic');
+                const avatarText = document.getElementById('avatar-text');
+                profilePic.src = currentUser.profile.profilePic;
+                profilePic.style.display = 'block';
+                avatarText.style.display = 'none';
+            }
 
             // Update stats
             const cars = currentUser.profile?.cars || [];
@@ -430,6 +598,9 @@
 
             // Load bio
             document.getElementById('profile-bio').value = currentUser.profile?.bio || '';
+
+            // Load customization
+            loadCustomization();
 
             // Load settings
             document.getElementById('profile-name-input').value = currentUser.name;
@@ -507,7 +678,7 @@
             
             currentUser.profile.bio = bio;
             updateUserInDatabase();
-            showMessage('Bio updated successfully!', 'success');
+            showMessage('Bio updated successfully!', 'success', 'bio-message');
         }
 
         // Update settings
@@ -517,7 +688,7 @@
             const email = document.getElementById('profile-email-input').value.trim();
             
             if (!name || !email) {
-                showMessage('Please fill in all fields', 'error');
+                showMessage('Please fill in all fields', 'error', 'settings-message');
                 return;
             }
 
@@ -525,7 +696,7 @@
             currentUser.email = email;
             updateUserInDatabase();
             loadProfile();
-            showMessage('Settings updated successfully!', 'success');
+            showMessage('Settings updated successfully!', 'success', 'settings-message');
         }
 
         // Update user in database
@@ -540,9 +711,111 @@
             }
         }
 
+        // Handle profile picture upload
+        function handleProfilePicUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showMessage('Please select an image file', 'error');
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                showMessage('Image size must be less than 5MB', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = e.target.result;
+                
+                // Store in user profile
+                if (!currentUser.profile) {
+                    currentUser.profile = {};
+                }
+                currentUser.profile.profilePic = imageData;
+                
+                // Update display
+                const profilePic = document.getElementById('profile-pic');
+                const avatarText = document.getElementById('avatar-text');
+                profilePic.src = imageData;
+                profilePic.style.display = 'block';
+                avatarText.style.display = 'none';
+                
+                // Save to database
+                updateUserInDatabase();
+                showMessage('Profile picture updated successfully!', 'success', 'customization-message');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Load customization
+        function loadCustomization() {
+            if (!currentUser.profile) return;
+            
+            const customization = currentUser.profile.customization || {};
+            document.getElementById('profile-theme').value = customization.theme || 'gold';
+            document.getElementById('favorite-brand').value = customization.favoriteBrand || '';
+            document.getElementById('driving-style').value = customization.drivingStyle || 'cruise';
+            document.getElementById('instagram-handle').value = customization.instagram || '';
+            document.getElementById('essex-location').value = customization.location || '';
+            
+            // Apply theme
+            if (customization.theme) {
+                updateProfileTheme(customization.theme);
+            }
+        }
+
+        // Update profile theme
+        function updateProfileTheme(theme) {
+            const selectedTheme = theme || document.getElementById('profile-theme').value;
+            const themes = {
+                gold: { primary: '#ffd700', secondary: '#ffed4e' },
+                blue: { primary: '#00bfff', secondary: '#87ceeb' },
+                red: { primary: '#ff4444', secondary: '#ff6666' },
+                green: { primary: '#44ff44', secondary: '#66ff66' },
+                purple: { primary: '#ff44ff', secondary: '#ff66ff' }
+            };
+            
+            const colors = themes[selectedTheme];
+            if (colors) {
+                // Update CSS variables or direct styles
+                document.documentElement.style.setProperty('--primary-color', colors.primary);
+                document.documentElement.style.setProperty('--secondary-color', colors.secondary);
+                
+                // Update border colors
+                const borders = document.querySelectorAll('.profile-header, .stat-card, .profile-section');
+                borders.forEach(el => {
+                    el.style.borderColor = colors.primary;
+                });
+            }
+        }
+
+        // Update customization
+        function updateCustomization() {
+            if (!currentUser.profile) {
+                currentUser.profile = {};
+            }
+            if (!currentUser.profile.customization) {
+                currentUser.profile.customization = {};
+            }
+            
+            currentUser.profile.customization = {
+                theme: document.getElementById('profile-theme').value,
+                favoriteBrand: document.getElementById('favorite-brand').value,
+                drivingStyle: document.getElementById('driving-style').value,
+                instagram: document.getElementById('instagram-handle').value,
+                location: document.getElementById('essex-location').value
+            };
+            
+            updateUserInDatabase();
+            showMessage('Customization saved successfully!', 'success', 'customization-message');
+        }
+
         // Show message
-        function showMessage(text, type) {
-            const messageDiv = document.getElementById('message');
+        function showMessage(text, type, targetId = 'message') {
+            const messageDiv = document.getElementById(targetId);
             messageDiv.textContent = text;
             messageDiv.className = `message ${type}-message`;
             messageDiv.style.display = 'block';
