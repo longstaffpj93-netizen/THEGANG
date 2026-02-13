@@ -640,6 +640,13 @@
             feedPosts.unshift(newPost);
             localStorage.setItem('mostWantedFeed', JSON.stringify(feedPosts));
             console.log('Feed updated, total posts:', feedPosts.length);
+            console.log('Feed saved to localStorage with key: mostWantedFeed');
+            console.log('Feed data size:', JSON.stringify(feedPosts).length, 'characters');
+            
+            // Verify feed was saved
+            const savedFeed = localStorage.getItem('mostWantedFeed');
+            console.log('Feed verification - saved data exists:', !!savedFeed);
+            console.log('Feed verification - saved data length:', savedFeed ? savedFeed.length : 0);
             
             closeShareModal();
             loadEnhancedFeedPosts();
@@ -726,8 +733,29 @@
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             initializeFeedDatabase();
+            verifyFeedPersistence();
             loadEnhancedFeedPosts();
         });
+        
+        // Verify feed persistence across users
+        function verifyFeedPersistence() {
+            const feedData = localStorage.getItem('mostWantedFeed');
+            console.log('=== FEED PERSISTENCE CHECK (feed.html) ===');
+            console.log('Feed data exists:', !!feedData);
+            console.log('Feed data length:', feedData ? feedData.length : 0);
+            
+            if (feedData) {
+                try {
+                    const parsedFeed = JSON.parse(feedData);
+                    console.log('Parsed feed posts:', parsedFeed.length);
+                    console.log('Feed authors:', parsedFeed.map(post => post.authorName));
+                    console.log('Feed timestamps:', parsedFeed.map(post => new Date(post.timestamp).toLocaleString()));
+                } catch (e) {
+                    console.error('Error parsing feed data:', e);
+                }
+            }
+            console.log('=== END FEED PERSISTENCE CHECK (feed.html) ===');
+        }
     </script>
 </body>
 </html>

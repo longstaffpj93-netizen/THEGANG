@@ -130,6 +130,13 @@ function submitProfileShare(event) {
     feedPosts.unshift(newPost);
     localStorage.setItem('mostWantedFeed', JSON.stringify(feedPosts));
     console.log('Feed updated, total posts:', feedPosts.length);
+    console.log('Feed saved to localStorage with key: mostWantedFeed');
+    console.log('Feed data size:', JSON.stringify(feedPosts).length, 'characters');
+    
+    // Verify feed was saved
+    const savedFeed = localStorage.getItem('mostWantedFeed');
+    console.log('Feed verification - saved data exists:', !!savedFeed);
+    console.log('Feed verification - saved data length:', savedFeed ? savedFeed.length : 0);
     
     // Close modal
     document.querySelector('.modal').remove();
@@ -202,6 +209,7 @@ function loadEnhancedFeedPosts(filter = 'all') {
     const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
     console.log('Feed posts found:', feedPosts.length);
     console.log('Feed posts data:', feedPosts);
+    console.log('localStorage key mostWantedFeed exists:', !!localStorage.getItem('mostWantedFeed'));
     const feedContainer = document.getElementById('feed-posts');
     
     if (!feedContainer) {
@@ -233,6 +241,26 @@ function loadEnhancedFeedPosts(filter = 'all') {
     
     feedContainer.innerHTML = filteredPosts.map(post => createEnhancedPostHTML(post)).join('');
     console.log('Feed posts rendered');
+}
+
+// Verify feed persistence across users
+function verifyFeedPersistence() {
+    const feedData = localStorage.getItem('mostWantedFeed');
+    console.log('=== FEED PERSISTENCE CHECK ===');
+    console.log('Feed data exists:', !!feedData);
+    console.log('Feed data length:', feedData ? feedData.length : 0);
+    
+    if (feedData) {
+        try {
+            const parsedFeed = JSON.parse(feedData);
+            console.log('Parsed feed posts:', parsedFeed.length);
+            console.log('Feed authors:', parsedFeed.map(post => post.authorName));
+            console.log('Feed timestamps:', parsedFeed.map(post => new Date(post.timestamp).toLocaleString()));
+        } catch (e) {
+            console.error('Error parsing feed data:', e);
+        }
+    }
+    console.log('=== END FEED PERSISTENCE CHECK ===');
 }
 
 // Create enhanced post HTML with profile shares
