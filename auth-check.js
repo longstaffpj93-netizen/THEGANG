@@ -77,7 +77,12 @@ function addLogoutFunctionality() {
 // Add user info display
 function addUserInfoDisplay() {
     const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
-    if (!currentUser) return;
+    if (!currentUser) {
+        console.log('No current user found');
+        return;
+    }
+    
+    console.log('Adding user info for:', currentUser.name);
     
     // Add user info to navigation
     const nav = document.querySelector('.clean-nav');
@@ -97,6 +102,9 @@ function addUserInfoDisplay() {
             <a href="profile.html" class="profile-link-nav">👤 Profile</a>
         `;
         nav.appendChild(userInfo);
+        console.log('User info added to navigation');
+    } else {
+        console.log('Navigation not found');
     }
 }
 
@@ -131,6 +139,10 @@ function enhancedAuthCheck() {
     if (!checkAuthentication()) {
         return;
     }
+    
+    // Add logout functionality and user info display
+    addLogoutFunctionality();
+    addUserInfoDisplay();
     
     // Page-specific authentication logic
     switch(currentPage) {
@@ -182,63 +194,3 @@ setInterval(() => {
         return;
     }
 }, 30000); // Check every 30 seconds
-        .user-info a {
-            color: #ffd700;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 5px 10px;
-            border: 1px solid #ffd700;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .user-info a:hover {
-            background: rgba(255,215,0,0.2);
-            transform: scale(1.05);
-        }
-
-        .profile-link-nav {
-            color: #ffd700;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 5px 10px;
-            border: 1px solid #ffd700;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .profile-link-nav:hover {
-            background: rgba(255,215,0,0.2);
-            transform: scale(1.05);
-        }
-        .user-info a {
-            color: #ffd700;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 5px 10px;
-            border: 1px solid #ffd700;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .user-info a:hover {
-            background: rgba(255,215,0,0.2);
-            transform: scale(1.05);
-        }
-
-        .profile-link-nav {
-            color: #ffd700;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 5px 10px;
-            border: 1px solid #ffd700;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .profile-link-nav:hover {
-            background: rgba(255,215,0,0.2);
-            transform: scale(1.05);
-        }
-
-        .user-info a {\n            color: #ffd700;\n            text-decoration: none;\n            font-weight: bold;\n            padding: 5px 10px;\n            border: 1px solid #ffd700;\n            border-radius: 15px;\n            transition: all 0.3s ease;\n        }\n        .user-info a:hover {\n            background: rgba(255,215,0,0.2);\n            transform: scale(1.05);\n        }
