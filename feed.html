@@ -466,8 +466,15 @@
 
         // Load feed posts
         function loadFeedPosts(filter = 'all') {
+            console.log('Loading feed posts with filter:', filter);
             const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
+            console.log('Feed posts found:', feedPosts.length);
             const feedContainer = document.getElementById('feed-posts');
+            
+            if (!feedContainer) {
+                console.log('Feed container not found');
+                return;
+            }
             
             // Sort by timestamp (newest first)
             const sortedPosts = feedPosts.sort((a, b) => b.timestamp - a.timestamp);
@@ -476,6 +483,8 @@
             const filteredPosts = filter === 'all' 
                 ? sortedPosts 
                 : sortedPosts.filter(post => post.type === filter);
+            
+            console.log('Filtered posts:', filteredPosts.length);
             
             if (filteredPosts.length === 0) {
                 feedContainer.innerHTML = `
@@ -489,6 +498,7 @@
             }
             
             feedContainer.innerHTML = filteredPosts.map(post => createPostHTML(post)).join('');
+            console.log('Feed posts rendered using loadFeedPosts');
         }
 
         // Create post HTML
@@ -589,18 +599,27 @@
         function shareToFeed(event) {
             event.preventDefault();
             
+            console.log('Feed share initiated');
             const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
             if (!currentUser) {
+                console.log('No current user found for feed share');
                 alert('Please login to share to feed');
                 return;
             }
             
+            console.log('Current user for feed share:', currentUser.name);
             const content = document.getElementById('share-content').value.trim();
             const type = document.getElementById('share-type').value;
             
-            if (!content) return;
+            console.log('Feed share data:', { content, type });
+            
+            if (!content) {
+                console.log('No content provided for feed share');
+                return;
+            }
             
             const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
+            console.log('Current feed posts count:', feedPosts.length);
             
             const newPost = {
                 id: Date.now().toString(),
@@ -616,8 +635,11 @@
                 liked: false
             };
             
+            console.log('New feed post created:', newPost);
+            
             feedPosts.unshift(newPost);
             localStorage.setItem('mostWantedFeed', JSON.stringify(feedPosts));
+            console.log('Feed updated, total posts:', feedPosts.length);
             
             closeShareModal();
             loadEnhancedFeedPosts();
@@ -633,12 +655,15 @@
                 border-radius: 10px;
                 margin-bottom: 20px;
                 text-align: center;
+                font-weight: bold;
             `;
-            successMessage.textContent = '✅ Shared to feed successfully!';
+            successMessage.textContent = 'Post shared successfully!';
             feedContainer.insertBefore(successMessage, feedContainer.firstChild);
             
             setTimeout(() => {
-                feedContainer.removeChild(successMessage);
+                if (successMessage.parentNode) {
+                    successMessage.parentNode.removeChild(successMessage);
+                }
             }, 3000);
         }
 
