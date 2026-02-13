@@ -405,14 +405,7 @@
 <body>
     <!-- Navigation -->
     <div class="clean-nav">
-        <a href="index.html" class="nav-btn">🏠 Home</a>
-        <a href="car-meets.html" class="nav-btn">🚗 Car Meets</a>
-        <a href="merch.html" class="nav-btn">🛍️ Merch</a>
-        <a href="team.html" class="nav-btn">👥 Team</a>\n        <a href="feed.html" class="nav-btn">📢 Feed</a>
-        <div class="user-nav">
-            <a href="profile.html" class="nav-btn">👤 Profile</a>
-            <a href="#" class="nav-btn logout-btn" onclick="handleLogout()">Logout</a>
-        </div>
+        <!-- Navigation will be added by auth-check.js -->
     </div>
 
     <div class="profile-container">
@@ -1412,11 +1405,6 @@ function loadProfileImages() {
         headerPlaceholder.style.display = 'none';
     }
 }
-        // Handle logout
-        function handleLogout() {
-            localStorage.removeItem('mostWantedCurrentUser');
-            window.location.href = 'index.html';
-        }
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
