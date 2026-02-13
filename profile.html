@@ -616,6 +616,11 @@
         function loadProfile() {
             if (!currentUser) return;
 
+            console.log('Loading profile for user:', currentUser.name);
+
+            // Create user's profile page if it doesn't exist
+            createUserProfilePage();
+
             // Update header
             document.getElementById('avatar-text').textContent = currentUser.name.charAt(0).toUpperCase();
             document.getElementById('profile-name').textContent = currentUser.name;
@@ -656,6 +661,8 @@
             // Load settings
             document.getElementById('profile-name-input').value = currentUser.name;
             document.getElementById('profile-email-input').value = currentUser.email;
+            
+            console.log('Profile loaded successfully for:', currentUser.name);
         }
 
         // Load cars list
@@ -723,13 +730,32 @@
             event.preventDefault();
             const bio = document.getElementById('profile-bio').value.trim();
             
+            console.log('Updating bio for user:', currentUser.name, 'bio:', bio);
+            
             if (!currentUser.profile) {
                 currentUser.profile = {};
             }
             
             currentUser.profile.bio = bio;
+            
+            // Save to users database
+            const users = JSON.parse(localStorage.getItem('mostWantedUsers') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('mostWantedUsers', JSON.stringify(users));
+                console.log('Bio saved to users database');
+            }
+            
+            // Update current user session
+            localStorage.setItem('mostWantedCurrentUser', JSON.stringify(currentUser));
+            
+            // Recreate profile page with updated bio
+            createUserProfilePage();
+            
             updateUserInDatabase();
             showMessage('Bio updated successfully!', 'success', 'bio-message');
+            console.log('Bio update completed');
         }
 
         // Update settings
@@ -1095,22 +1121,94 @@ document.addEventListener('DOMContentLoaded', function() {
 // Initialize asset management
 initializeAssetManagement();
 
+// Create user-specific profile page
+function createUserProfilePage() {
+    const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
+    if (!currentUser) return;
+    
+    console.log('Creating profile page for user:', currentUser.name);
+    
+    // Generate profile page content
+    const profileContent = generateProfilePage(currentUser);
+    
+    // Store in localStorage for dynamic serving
+    const username = currentUser.name.toLowerCase().replace(/\s+/g, '-');
+    const profilePages = JSON.parse(localStorage.getItem('mostWantedProfilePages') || '{}');
+    profilePages[username] = profileContent;
+    localStorage.setItem('mostWantedProfilePages', JSON.stringify(profilePages));
+    
+    console.log('Profile page created and stored for:', username);
+}
+
+// Update user profile data
+function updateUserProfileData() {
+    const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
+    if (!currentUser) return;
+    
+    console.log('Updating profile data for user:', currentUser.name);
+    
+    // Update bio
+    const bioTextarea = document.getElementById('bio');
+    if (bioTextarea) {
+        currentUser.profile = currentUser.profile || {};
+        currentUser.profile.bio = bioTextarea.value;
+        console.log('Bio updated:', bioTextarea.value);
+    }
+    
+    // Update customization
+    const theme = document.getElementById('profile-theme')?.value;
+    const favoriteBrand = document.getElementById('favorite-brand')?.value;
+    const drivingStyle = document.getElementById('driving-style')?.value;
+    const instagram = document.getElementById('instagram-handle')?.value;
+    const location = document.getElementById('essex-location')?.value;
+    
+    if (theme || favoriteBrand || drivingStyle || instagram || location) {
+        currentUser.profile = currentUser.profile || {};
+        currentUser.profile.customization = currentUser.profile.customization || {};
+        
+        if (theme) currentUser.profile.customization.theme = theme;
+        if (favoriteBrand) currentUser.profile.customization.favoriteBrand = favoriteBrand;
+        if (drivingStyle) currentUser.profile.customization.drivingStyle = drivingStyle;
+        if (instagram) currentUser.profile.customization.instagram = instagram;
+        if (location) currentUser.profile.customization.location = location;
+        
+        console.log('Customization updated:', currentUser.profile.customization);
+    }
+    
+    // Save to users database
+    const users = JSON.parse(localStorage.getItem('mostWantedUsers') || '[]');
+    const userIndex = users.findIndex(u => u.id === currentUser.id);
+    if (userIndex !== -1) {
+        users[userIndex] = currentUser;
+        localStorage.setItem('mostWantedUsers', JSON.stringify(users));
+        console.log('User data saved to database');
+    }
+    
+    // Update current user session
+    localStorage.setItem('mostWantedCurrentUser', JSON.stringify(currentUser));
+    
+    // Recreate profile page with updated data
+    createUserProfilePage();
+    
+    console.log('Profile data updated and saved successfully');
+}
+
 // Load customization
 function loadCustomization() {
-            if (!currentUser.profile) return;
-            
-            const customization = currentUser.profile.customization || {};
-            document.getElementById('profile-theme').value = customization.theme || 'gold';
-            document.getElementById('favorite-brand').value = customization.favoriteBrand || '';
-            document.getElementById('driving-style').value = customization.drivingStyle || 'cruise';
-            document.getElementById('instagram-handle').value = customization.instagram || '';
-            document.getElementById('essex-location').value = customization.location || '';
-            
-            // Apply theme
-            if (customization.theme) {
-                updateProfileTheme(customization.theme);
-            }
-        }
+    if (!currentUser.profile) return;
+    
+    const customization = currentUser.profile.customization || {};
+    document.getElementById('profile-theme').value = customization.theme || 'gold';
+    document.getElementById('favorite-brand').value = customization.favoriteBrand || '';
+    document.getElementById('driving-style').value = customization.drivingStyle || 'cruise';
+    document.getElementById('instagram-handle').value = customization.instagram || '';
+    document.getElementById('essex-location').value = customization.location || '';
+    
+    // Apply theme
+    if (customization.theme) {
+        updateProfileTheme(customization.theme);
+    }
+}
 
         // Update profile theme
         function updateProfileTheme(theme) {
@@ -1139,6 +1237,8 @@ function loadCustomization() {
 
         // Update customization
         function updateCustomization() {
+            console.log('Updating customization for user:', currentUser.name);
+            
             if (!currentUser.profile) {
                 currentUser.profile = {};
             }
@@ -1154,11 +1254,29 @@ function loadCustomization() {
                 location: document.getElementById('essex-location').value
             };
             
+            console.log('Customization data:', currentUser.profile.customization);
+            
             // Store customization data
             storeUserAsset(currentUser.id, 'customization', currentUser.profile.customization);
             
+            // Save to users database
+            const users = JSON.parse(localStorage.getItem('mostWantedUsers') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('mostWantedUsers', JSON.stringify(users));
+                console.log('Customization saved to users database');
+            }
+            
+            // Update current user session
+            localStorage.setItem('mostWantedCurrentUser', JSON.stringify(currentUser));
+            
+            // Recreate profile page with updated customization
+            createUserProfilePage();
+            
             updateUserInDatabase();
             showMessage('Customization saved successfully!', 'success', 'customization-message');
+            console.log('Customization update completed');
         }
 
         // Show message

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Most Wanted - Login / Sign Up</title>
     <script src="auth-check.js"></script>
+    <script src="profile-generator.js"></script>
     <style>
         body {
             margin: 0;
@@ -326,6 +327,16 @@
             
             users.push(newUser);
             localStorage.setItem('mostWantedUsers', JSON.stringify(users));
+            
+            // Create user's profile page
+            if (typeof generateProfilePage === 'function') {
+                const profileContent = generateProfilePage(newUser);
+                const username = newUser.name.toLowerCase().replace(/\s+/g, '-');
+                const profilePages = JSON.parse(localStorage.getItem('mostWantedProfilePages') || '{}');
+                profilePages[username] = profileContent;
+                localStorage.setItem('mostWantedProfilePages', JSON.stringify(profilePages));
+                console.log('Profile page created for new user:', username);
+            }
             
             successDiv.textContent = 'Account created successfully! You can now login.';
             successDiv.style.display = 'block';
