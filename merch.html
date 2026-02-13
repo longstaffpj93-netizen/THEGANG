@@ -578,12 +578,30 @@
             opacity: 0.9;
             line-height: 1.5;
         }
-        .nav-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 3rem;
-            flex-wrap: wrap;
+        .style-selector, .sticker-selector {
+            margin-bottom: 15px;
+        }
+
+        .style-selector label, .sticker-selector label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .style-select, .sticker-select {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid #ffd700;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .style-select option, .sticker-select option {
+            background: #000;
+            color: #ffffff;
         }
 
         .nav-btn {
@@ -664,7 +682,7 @@
 
     <div class="content">
         <div class="merch-container">
-            <h1>THE GANG</h1>
+            <h1>Most Wanted</h1>
             <div class="soon">OFFICIAL MERCHANDISE</div>
             
             <p>Gold-standard apparel and accessories for the Essex car community.<br>
@@ -683,15 +701,22 @@
                 <!-- Hoodie Product -->
                 <div class="product-card" data-category="hoodies">
                     <div class="product-image">
-                        <img src="hoodie.jpg" alt="THE GANG Premium Hoodie">
+                        <img src="hoodie.jpg" alt="Most Wanted Premium Hoodie">
                     </div>
                     <div class="product-info">
                         <div class="product-name">Premium Hoodie</div>
                         <div class="product-price">£45.00</div>
                         <div class="product-description">
-                            Heavyweight premium hoodie with embroidered THE GANG logo. Perfect for Essex nights - keeps you warm while looking fresh. 80% cotton, 20% polyester with kangaroo pocket.
+                            Heavyweight premium hoodie with embroidered Most Wanted logo. Perfect for Essex nights - keeps you warm while looking fresh. 80% cotton, 20% polyester with kangaroo pocket.
                         </div>
                         <div class="product-options">
+                            <div class="style-selector">
+                                <label>Style:</label>
+                                <select class="style-select">
+                                    <option value="front">Front Logo Only</option>
+                                    <option value="frontback">Front & Back Logo</option>
+                                </select>
+                            </div>
                             <div class="size-selector">
                                 <button class="size-btn" data-size="S">S</button>
                                 <button class="size-btn" data-size="M">M</button>
@@ -711,13 +736,13 @@
                 <!-- Hat Product -->
                 <div class="product-card" data-category="caps">
                     <div class="product-image">
-                        <img src="hat.jpg" alt="THE GANG Snapback Cap">
+                        <img src="hat.jpg" alt="Most Wanted Snapback Cap">
                     </div>
                     <div class="product-info">
                         <div class="product-name">Snapback Cap</div>
                         <div class="product-price">£20.00</div>
                         <div class="product-description">
-                            Classic snapback with flat peak and embroidered THE GANG logo. Structured front panel maintains shape while adjustable strap ensures perfect fit. Premium wool blend for comfort.
+                            Classic snapback with flat peak and embroidered Most Wanted logo. Structured front panel maintains shape while adjustable strap ensures perfect fit. Premium wool blend for comfort.
                         </div>
                         <div class="product-options">
                             <div class="size-selector">
@@ -736,13 +761,13 @@
                 <!-- Keyring Product -->
                 <div class="product-card" data-category="accessories">
                     <div class="product-image">
-                        <img src="keyring.jpg" alt="THE GANG Brass Keychain">
+                        <img src="keyring.jpg" alt="Most Wanted Brass Keychain">
                     </div>
                     <div class="product-info">
                         <div class="product-name">Brass Keychain</div>
                         <div class="product-price">£15.00</div>
                         <div class="product-description">
-                            Solid brass keychain with laser-etched THE GANG logo. Premium weight and finish - won't rust or fade. Perfect for your keys or as a collectible piece.
+                            Solid brass keychain with laser-etched Most Wanted logo. Premium weight and finish - won't rust or fade. Perfect for your keys or as a collectible piece.
                         </div>
                         <div class="product-options">
                             <div class="size-selector">
@@ -761,13 +786,13 @@
                 <!-- Tracksuit Product -->
                 <div class="product-card" data-category="tracksuits">
                     <div class="product-image">
-                        <img src="tracksuit.jpg" alt="THE GANG Full Tracksuit">
+                        <img src="tracksuit.jpg" alt="Most Wanted Full Tracksuit">
                     </div>
                     <div class="product-info">
                         <div class="product-name">Full Tracksuit</div>
                         <div class="product-price">£120.00</div>
                         <div class="product-description">
-                            Complete tracksuit set with jacket and matching pants. Premium polyester blend with THE GANG branding. Perfect for car meets - looks sharp while staying comfortable.
+                            Complete tracksuit set with jacket and matching pants. Premium polyester blend with Most Wanted branding. Perfect for car meets - looks sharp while staying comfortable.
                         </div>
                         <div class="product-options">
                             <div class="size-selector">
@@ -786,10 +811,88 @@
                     </div>
                 </div>
 
-            <div class="nav-buttons">
-                <a href="car-meets.html" class="nav-btn">🚗 Car Meets</a>
-                <a href="team.html" class="nav-btn">👥 Meet the Team</a>
-            </div>
+                <!-- Tee Product -->
+                <div class="product-card" data-category="accessories">
+                    <div class="product-image">
+                        <img src="tee.jpg" alt="Most Wanted Premium Tee">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Premium Tee</div>
+                        <div class="product-price">£25.00</div>
+                        <div class="product-description">
+                            High-quality cotton tee with embroidered Most Wanted logo. Classic fit with reinforced collar. Perfect for everyday wear - soft, durable, and stylish.
+                        </div>
+                        <div class="product-options">
+                            <div class="size-selector">
+                                <button class="size-btn" data-size="S">S</button>
+                                <button class="size-btn" data-size="M">M</button>
+                                <button class="size-btn active" data-size="L">L</button>
+                                <button class="size-btn" data-size="XL">XL</button>
+                            </div>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="decreaseQuantity(this)">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1" max="10">
+                                <button class="quantity-btn" onclick="increaseQuantity(this)">+</button>
+                            </div>
+                        </div>
+                        <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Socks Product -->
+                <div class="product-card" data-category="accessories">
+                    <div class="product-image">
+                        <img src="socks.jpg" alt="Most Wanted Premium Socks">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Premium Socks</div>
+                        <div class="product-price">£12.00</div>
+                        <div class="product-description">
+                            Comfortable crew socks with Most Wanted branding. Cotton blend with reinforced heel and toe. Perfect for long drives or casual wear.
+                        </div>
+                        <div class="product-options">
+                            <div class="size-selector">
+                                <button class="size-btn active" data-size="OSFA">One Size</button>
+                            </div>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="decreaseQuantity(this)">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1" max="10">
+                                <button class="quantity-btn" onclick="increaseQuantity(this)">+</button>
+                            </div>
+                        </div>
+                        <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+                    </div>
+                </div>
+
+                <!-- Sticker Pack Product -->
+                <div class="product-card" data-category="accessories">
+                    <div class="product-image">
+                        <img src="stickerpack.jpg" alt="Most Wanted Sticker Pack">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">Sticker Pack</div>
+                        <div class="product-price">£8.00</div>
+                        <div class="product-description">
+                            High-quality vinyl stickers with Most Wanted designs. Weather-resistant and perfect for your car, laptop, or anywhere you want to show support.
+                        </div>
+                        <div class="product-options">
+                            <div class="sticker-selector">
+                                <label>Stickers:</label>
+                                <select class="sticker-select">
+                                    <option value="1">1 Sticker</option>
+                                    <option value="2">2 Stickers</option>
+                                    <option value="3">3 Stickers</option>
+                                </select>
+                            </div>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="decreaseQuantity(this)">-</button>
+                                <input type="number" class="quantity-input" value="1" min="1" max="10">
+                                <button class="quantity-btn" onclick="increaseQuantity(this)">+</button>
+                            </div>
+                        </div>
+                        <button class="add-to-cart" onclick="addToCart(this)">Add to Cart</button>
+                    </div>
+                </div>
         </div>
     </div>
 
@@ -1066,11 +1169,13 @@
             cart.splice(index, 1);
             updateCart();
         }
-        <!-- Bottom Clean Navigation -->
-        <div class="clean-nav bottom">
-            <a href="car-meets.html" class="nav-btn">🏠 Home</a>
-            <a href="team.html" class="nav-btn">👥 Team</a>
-        </div>
+    </script>
+
+    <!-- Bottom Clean Navigation -->
+    <div class="clean-nav bottom">
+        <a href="car-meets.html" class="nav-btn">🏠 Home</a>
+        <a href="team.html" class="nav-btn">👥 Team</a>
+    </div>
     </div>
 </body>
 </html>
