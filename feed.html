@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Most Wanted - Community Feed</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('assets/images/background.jpg') center/cover fixed;
+            font-family: 'Arial Black', Arial, sans-serif;
+            color: #fff;
+        }
+
+        /* Navigation */
+        .clean-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(15px);
+            z-index: 1001;
+            padding: 20px 10px;
+            text-align: center;
+            border-bottom: 2px solid #ffd700;
+            box-shadow: 0 4px 20px rgba(255,215,0,0.1);
+        }
+
+        .clean-nav .nav-btn {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            font-family: 'Arial Black', Arial, sans-serif;
+            text-decoration: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0 8px;
+            display: inline-block;
+        }
+
+        .clean-nav .nav-btn:hover {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,215,0,0.3);
+        }
+
+        .feed-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 120px 20px 50px;
+        }
+
+        .feed-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .feed-title {
+            font-size: 3rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255,215,0,0.8);
+        }
+
+        .feed-subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .share-to-feed-btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 25px;
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 15px 30px;
+            margin-bottom: 40px;
+        }
+
+        .share-to-feed-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255,215,0,0.3);
+        }
+
+        .feed-filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(255,215,0,0.2);
+            transform: scale(1.05);
+        }
+
+        .feed-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .feed-post {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feed-post:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255,215,0,0.2);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #000;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .post-meta {
+            flex: 1;
+        }
+
+        .post-author {
+            font-size: 1.1rem;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .post-time {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .post-content {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .post-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .post-image {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #ffd700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .post-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .post-action-btn {
+            background: transparent;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .post-action-btn:hover {
+            background: rgba(255,215,0,0.2);
+            transform: scale(1.05);
+        }
+
+        .post-action-btn.liked {
+            background: rgba(255,0,0,0.2);
+            border-color: #ff4444;
+            color: #ff6666;
+        }
+
+        .empty-feed {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .empty-feed-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .empty-feed-text {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-feed-subtext {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+
+        .post-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,215,0,0.2);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(0,0,0,0.95);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: 1px solid #ff4444;
+            color: #ff6666;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,0,0,0.2);
+        }
+
+        .share-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .form-group textarea {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            color: #fff;
+            padding: 10px;
+            font-family: 'Arial Black', Arial, sans-serif;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group select {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            color: #fff;
+            padding: 10px;
+            font-family: 'Arial Black', Arial, sans-serif;
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px 24px;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,215,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="clean-nav">
+        <a href="index.html" class="nav-btn">🏠 Home</a>
+        <a href="car-meets.html" class="nav-btn">🚗 Car Meets</a>
+        <a href="merch.html" class="nav-btn">🛍️ Merch</a>
+        <a href="team.html" class="nav-btn">👥 Team</a>
+        <a href="feed.html" class="nav-btn">📢 Feed</a>
+        <a href="auth.html" class="nav-btn">👤 Login / Sign Up</a>
+    </div>
+
+    <div class="feed-container">
+        <div class="feed-header">
+            <h1 class="feed-title">📢 Community Feed</h1>
+            <p class="feed-subtitle">Share your Most Wanted moments with the community</p>
+            <button class="share-to-feed-btn" onclick="openShareModal()">📝 Share to Feed</button>
+        </div>
+
+        <div class="feed-filters">
+            <button class="filter-btn active" onclick="filterPosts('all')">All Posts</button>
+            <button class="filter-btn" onclick="filterPosts('cars')">🚗 Cars</button>
+            <button class="filter-btn" onclick="filterPosts('meets')">📍 Meets</button>
+            <button class="filter-btn" onclick="filterPosts('profiles')">👤 Profiles</button>
+            <button class="filter-btn" onclick="filterPosts('merch')">🛍️ Merch</button>
+        </div>
+
+        <div class="feed-posts" id="feed-posts">
+            <div class="loading">Loading feed...</div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal" id="share-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Share to Feed</h2>
+                <button class="modal-close" onclick="closeShareModal()">×</button>
+            </div>
+            <form class="share-form" onsubmit="shareToFeed(event)">
+                <div class="form-group">
+                    <label for="share-content">What's on your mind?</label>
+                    <textarea id="share-content" placeholder="Share your Most Wanted moment..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="share-type">Post Type</label>
+                    <select id="share-type">
+                        <option value="general">General</option>
+                        <option value="cars">🚗 Cars</option>
+                        <option value="meets">📍 Meets</option>
+                        <option value="profiles">👤 Profiles</option>
+                        <option value="merch">🛍️ Merch</option>
+                    </select>
+                </div>
+                <button type="submit" class="share-btn">Share to Feed</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="feed-functions.js"></script>\n    <script>
+        // Initialize feed database
+        function initializeFeedDatabase() {
+            if (!localStorage.getItem('mostWantedFeed')) {
+                localStorage.setItem('mostWantedFeed', JSON.stringify([]));
+            }
+        }
+
+        // Load feed posts
+        function loadFeedPosts(filter = 'all') {
+            const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
+            const feedContainer = document.getElementById('feed-posts');
+            
+            // Sort by timestamp (newest first)
+            const sortedPosts = feedPosts.sort((a, b) => b.timestamp - a.timestamp);
+            
+            // Filter posts
+            const filteredPosts = filter === 'all' 
+                ? sortedPosts 
+                : sortedPosts.filter(post => post.type === filter);
+            
+            if (filteredPosts.length === 0) {
+                feedContainer.innerHTML = `
+                    <div class="empty-feed">
+                        <div class="empty-feed-icon">📢</div>
+                        <div class="empty-feed-text">No posts yet</div>
+                        <div class="empty-feed-subtext">Be the first to share with the Most Wanted community!</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            feedContainer.innerHTML = filteredPosts.map(post => createPostHTML(post)).join('');
+        }
+
+        // Create post HTML
+        function createPostHTML(post) {
+            const date = new Date(post.timestamp);
+            const timeAgo = getTimeAgo(date);
+            
+            return `
+                <div class="feed-post" data-post-id="${post.id}">
+                    <div class="post-type-badge">${getTypeEmoji(post.type)} ${post.type.charAt(0).toUpperCase() + post.type.slice(1)}</div>
+                    <div class="post-header">
+                        <div class="post-avatar">
+                            ${post.authorProfilePic ? 
+                                `<img src="${post.authorProfilePic}" alt="${post.authorName}">` : 
+                                post.authorName.charAt(0).toUpperCase()
+                            }
+                        </div>
+                        <div class="post-meta">
+                            <div class="post-author">${post.authorName}</div>
+                            <div class="post-time">${timeAgo}</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${post.content}</div>
+                    ${post.images && post.images.length > 0 ? `
+                        <div class="post-images">
+                            ${post.images.map(image => 
+                                `<img src="${image}" class="post-image" onclick="viewImage('${image}')" alt="Post image">`
+                            ).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="post-actions">
+                        <div class="post-actions-left">
+                            <button class="post-action-btn ${post.liked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
+                                <span>${post.liked ? '❤️' : '🤍'}</span>
+                                <span>${post.likes || 0}</span>
+                            </button>
+                            <button class="post-action-btn" onclick="viewPost('${post.id}')">
+                                <span>💬</span>
+                                <span>${post.comments || 0}</span>
+                            </button>
+                        </div>
+                        <button class="post-action-btn" onclick="sharePost('${post.id}')">
+                            <span>🔗</span>
+                            <span>Share</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get time ago string
+        function getTimeAgo(date) {
+            const seconds = Math.floor((Date.now() - date) / 1000);
+            
+            if (seconds < 60) return 'just now';
+            if (seconds < 3600) return Math.floor(seconds / 60) + ' minutes ago';
+            if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
+            if (seconds < 604800) return Math.floor(seconds / 86400) + ' days ago';
+            return date.toLocaleDateString();
+        }
+
+        // Get type emoji
+        function getTypeEmoji(type) {
+            const emojis = {
+                'general': '📢',
+                'cars': '🚗',
+                'meets': '📍',
+                'profiles': '👤',
+                'merch': '🛍️'
+            };
+            return emojis[type] || '📢';
+        }
+
+        // Filter posts
+        function filterPosts(type) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            loadEnhancedFeedPosts(type);
+        }
+
+        // Open share modal
+        function openShareModal() {
+            document.getElementById('share-modal').style.display = 'flex';
+        }
+
+        // Close share modal
+        function closeShareModal() {
+            document.getElementById('share-modal').style.display = 'none';
+            document.getElementById('share-content').value = '';
+            document.getElementById('share-type').value = 'general';
+        }
+
+        // Share to feed
+        function shareToFeed(event) {
+            event.preventDefault();
+            
+            const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
+            if (!currentUser) {
+                alert('Please login to share to feed');
+                return;
+            }
+            
+            const content = document.getElementById('share-content').value.trim();
+            const type = document.getElementById('share-type').value;
+            
+            if (!content) return;
+            
+            const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
+            
+            const newPost = {
+                id: Date.now().toString(),
+                authorId: currentUser.id,
+                authorName: currentUser.name,
+                authorProfilePic: currentUser.profile?.profilePic || null,
+                content: content,
+                type: type,
+                images: currentUser.profile?.galleryImages?.slice(0, 3) || [],
+                timestamp: Date.now(),
+                likes: 0,
+                comments: 0,
+                liked: false
+            };
+            
+            feedPosts.unshift(newPost);
+            localStorage.setItem('mostWantedFeed', JSON.stringify(feedPosts));
+            
+            closeShareModal();
+            loadEnhancedFeedPosts();
+            
+            // Show success message
+            const feedContainer = document.getElementById('feed-posts');
+            const successMessage = document.createElement('div');
+            successMessage.style.cssText = `
+                background: rgba(0,255,0,0.2);
+                border: 1px solid #44ff44;
+                color: #66ff66;
+                padding: 15px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+                text-align: center;
+            `;
+            successMessage.textContent = '✅ Shared to feed successfully!';
+            feedContainer.insertBefore(successMessage, feedContainer.firstChild);
+            
+            setTimeout(() => {
+                feedContainer.removeChild(successMessage);
+            }, 3000);
+        }
+
+        // Toggle like
+        function toggleLike(postId) {
+            const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
+            const post = feedPosts.find(p => p.id === postId);
+            
+            if (post) {
+                post.liked = !post.liked;
+                post.likes = post.liked ? (post.likes || 0) + 1 : Math.max(0, (post.likes || 0) - 1);
+                
+                localStorage.setItem('mostWantedFeed', JSON.stringify(feedPosts));
+                loadEnhancedFeedPosts();
+            }
+        }
+
+        // View image
+        function viewImage(imageSrc) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                cursor: pointer;
+            `;
+            
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.style.cssText = `
+                max-width: 90%;
+                max-height: 90%;
+                object-fit: contain;
+                border-radius: 10px;
+                box-shadow: 0 0 30px rgba(255,215,0,0.5);
+            `;
+            
+            modal.appendChild(img);
+            modal.onclick = () => document.body.removeChild(modal);
+            document.body.appendChild(modal);
+        }
+
+        // View post (placeholder for future comments)
+        function viewPost(postId) {
+            alert('Comments feature coming soon!');
+        }
+
+        // Share post (placeholder for future sharing)
+        function sharePost(postId) {
+            alert('Share feature coming soon!');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFeedDatabase();
+            loadEnhancedFeedPosts();
+        });
+    </script>
+</body>
+</html>
