@@ -133,6 +133,17 @@
             opacity: 1;
         }
 
+        #team-profile-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
         .member:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(255,215,0,0.3);
@@ -368,8 +379,9 @@
             <div class="member">
                 <div class="photo-placeholder">
                     <a href="profile.html" class="profile-link">
-                        <div class="profile-icon">
-                            <span class="profile-initial">PJ</span>
+                        <div class="profile-icon" id="team-profile-pic">
+                            <span class="profile-initial" id="team-profile-initial">PJ</span>
+                            <img id="team-profile-image" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="PJ Longstaff">
                         </div>
                         <div class="profile-overlay">
                             <span>View Profile</span>
@@ -383,5 +395,27 @@
         </div>
     </div>
 
+    <script>
+        // Load team member profile picture if available
+        function loadTeamProfilePic() {
+            const currentUser = localStorage.getItem('mostWantedCurrentUser');
+            if (currentUser) {
+                const user = JSON.parse(currentUser);
+                if (user.profile?.profilePic && user.name === 'PJ Longstaff') {
+                    const profileImage = document.getElementById('team-profile-image');
+                    const profileInitial = document.getElementById('team-profile-initial');
+                    
+                    profileImage.src = user.profile.profilePic;
+                    profileImage.style.display = 'block';
+                    profileInitial.style.display = 'none';
+                }
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTeamProfilePic();
+        });
+    </script>
 
 </html>
