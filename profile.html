@@ -1094,54 +1094,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
 // Initialize asset management
 initializeAssetManagement();
-        
-// Generate individual profile page
-function generateUserProfile() {
-    const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
-    if (!currentUser) return;
-            
-    const username = currentUser.name.toLowerCase().replace(/\s+/g, '-');
-            if (!file) return;
 
-            if (!file.type.startsWith('image/')) {
-                showMessage('Please select an image file', 'error');
-                return;
-            }
-
-            if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                showMessage('Image size must be less than 5MB', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const imageData = e.target.result;
-                
-                // Store in user profile
-                if (!currentUser.profile) {
-                    currentUser.profile = {};
-                }
-                currentUser.profile.profilePic = imageData;
-                
-                // Store in user-specific asset management
-                storeUserAsset(currentUser.id, 'profile-pic', imageData);
-                
-                // Update display
-                const profilePic = document.getElementById('profile-pic');
-                const avatarText = document.getElementById('avatar-text');
-                profilePic.src = imageData;
-                profilePic.style.display = 'block';
-                avatarText.style.display = 'none';
-                
-                // Save to database
-                updateUserInDatabase();
-                showMessage('Profile picture updated successfully!', 'success', 'customization-message');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Load customization
-        function loadCustomization() {
+// Load customization
+function loadCustomization() {
             if (!currentUser.profile) return;
             
             const customization = currentUser.profile.customization || {};
@@ -1219,6 +1174,48 @@ function generateUserProfile() {
         }
 
 // Profile Image Upload Functions
+
+// Handle profile picture upload
+function handleProfilePicUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        showMessage('Please select an image file', 'error', 'customization-message');
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        showMessage('Image size must be less than 5MB', 'error', 'customization-message');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imageData = e.target.result;
+        
+        // Store in user profile
+        if (!currentUser.profile) {
+            currentUser.profile = {};
+        }
+        currentUser.profile.profilePic = imageData;
+        
+        // Store in user-specific asset management
+        storeUserAsset(currentUser.id, 'profile-pic', imageData);
+        
+        // Update display
+        const profilePic = document.getElementById('profile-pic');
+        const avatarText = document.getElementById('avatar-text');
+        profilePic.src = imageData;
+        profilePic.style.display = 'block';
+        avatarText.style.display = 'none';
+        
+        // Save to database
+        updateUserInDatabase();
+        showMessage('Profile picture updated successfully!', 'success', 'customization-message');
+    };
+    reader.readAsDataURL(file);
+}
 
 // Handle profile image uploads
 function handleProfileImageUpload(event, imageNumber) {
@@ -1427,13 +1424,12 @@ function loadProfileImages() {
     }
 }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAuth();
-            loadProfile();
-        });
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkAuth();
+    loadProfile();
+});
 
-    <script src="feed-functions.js"></script>\n
-    </script>
+    <script src="feed-functions.js"></script>
 </body>
 </html>

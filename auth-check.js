@@ -63,6 +63,7 @@ function addLogoutFunctionality() {
     const nav = document.querySelector('.clean-nav');
     if (nav) {
         console.log('Navigation found, children count:', nav.children.length);
+        console.log('Current page:', window.location.pathname);
         
         // Check if navigation is empty, if so, add navigation links
         if (nav.children.length === 0) {
