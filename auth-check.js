@@ -17,7 +17,8 @@ function getCurrentPage() {
 // Redirect to auth if not authenticated
 function requireAuth() {
     if (!isAuthenticated()) {
-        window.location.href = 'auth.html';
+        // Use absolute path to ensure proper redirect
+        window.location.href = '/THEGANG/auth.html';
         return false;
     }
     return true;
@@ -32,7 +33,8 @@ function checkAuthentication() {
     
     // If not authenticated and not on a public page, redirect to auth
     if (!isAuthenticated() && !publicPages.includes(currentPage)) {
-        window.location.href = 'auth.html';
+        // Use absolute path to ensure proper redirect
+        window.location.href = '/THEGANG/auth.html';
         return false;
     }
     

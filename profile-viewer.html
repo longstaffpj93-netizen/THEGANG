@@ -336,27 +336,33 @@
                 return;
             }
 
-            // Try to get from localStorage first
+            // Try to get from profile pages storage first
             const profilePages = JSON.parse(localStorage.getItem('mostWantedProfilePages') || '{}');
             
             if (profilePages[username]) {
-                // Display the stored profile
+                // Display stored profile page
                 document.getElementById('profile-content').innerHTML = profilePages[username];
+                console.log('Loaded profile from profile pages storage for:', username);
                 return;
             }
-
-            // If not in localStorage, try to find user and generate
+            
+            // If not in profile pages, try to find user and generate
             const users = JSON.parse(localStorage.getItem('mostWantedUsers') || '[]');
             const user = users.find(u => u.name.toLowerCase().replace(/\s+/g, '-') === username);
             
             if (user) {
+                console.log('Found user in database, generating profile for:', username);
                 // Generate profile on the fly
                 generateAndDisplayProfile(user);
             } else {
+                console.log('User not found in database for:', username);
                 document.getElementById('profile-content').innerHTML = `
-                    <div class="error">User not found</div>
-                    <div class="back-link">
-                        <a href="team.html">← Back to Team</a>
+                    <div class="error">
+                        <h2>Profile Not Found</h2>
+                        <p>The profile for <strong>${username}</strong> was not found.</p>
+                        <div class="back-link">
+                            <a href="team.html">← Back to Team</a>
+                        </div>
                     </div>
                 `;
             }
