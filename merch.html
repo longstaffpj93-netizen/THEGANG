@@ -705,16 +705,16 @@
                     </div>
                     <div class="product-info">
                         <div class="product-name">Premium Hoodie</div>
-                        <div class="product-price">£45.00</div>
+                        <div class="product-price" id="hoodie-price">£45.00</div>
                         <div class="product-description">
                             Heavyweight premium hoodie with embroidered Most Wanted logo. Perfect for Essex nights - keeps you warm while looking fresh. 80% cotton, 20% polyester with kangaroo pocket.
                         </div>
                         <div class="product-options">
                             <div class="style-selector">
                                 <label>Style:</label>
-                                <select class="style-select">
-                                    <option value="front">Front Logo Only</option>
-                                    <option value="frontback">Front & Back Logo</option>
+                                <select class="style-select" id="hoodie-style" onchange="updateHoodiePrice()">
+                                    <option value="front" data-price="45">Front Logo Only - £45</option>
+                                    <option value="frontback" data-price="55">Front & Back Logo - £55</option>
                                 </select>
                             </div>
                             <div class="size-selector">
@@ -736,13 +736,13 @@
                 <!-- Hat Product -->
                 <div class="product-card" data-category="caps">
                     <div class="product-image">
-                        <img src="hat.jpg" alt="Most Wanted Snapback Cap">
+                        <img src="hat.jpg" alt="Most Wanted Cap">
                     </div>
                     <div class="product-info">
-                        <div class="product-name">Snapback Cap</div>
+                        <div class="product-name">Cap</div>
                         <div class="product-price">£20.00</div>
                         <div class="product-description">
-                            Classic snapback with flat peak and embroidered Most Wanted logo. Structured front panel maintains shape while adjustable strap ensures perfect fit. Premium wool blend for comfort.
+                            Classic cap with embroidered Most Wanted logo. Adjustable strap ensures perfect fit. Premium cotton blend for comfort and durability.
                         </div>
                         <div class="product-options">
                             <div class="size-selector">
@@ -761,13 +761,13 @@
                 <!-- Keyring Product -->
                 <div class="product-card" data-category="accessories">
                     <div class="product-image">
-                        <img src="keyring.jpg" alt="Most Wanted Brass Keychain">
+                        <img src="keyring.jpg" alt="Most Wanted Keychain">
                     </div>
                     <div class="product-info">
-                        <div class="product-name">Brass Keychain</div>
+                        <div class="product-name">Most Wanted Keychain</div>
                         <div class="product-price">£15.00</div>
                         <div class="product-description">
-                            Solid brass keychain with laser-etched Most Wanted logo. Premium weight and finish - won't rust or fade. Perfect for your keys or as a collectible piece.
+                            Solid metal keychain with laser-etched Most Wanted logo. Premium weight and finish - won't rust or fade. Perfect for your keys or as a collectible piece.
                         </div>
                         <div class="product-options">
                             <div class="size-selector">
@@ -871,17 +871,17 @@
                     </div>
                     <div class="product-info">
                         <div class="product-name">Sticker Pack</div>
-                        <div class="product-price">£8.00</div>
+                        <div class="product-price" id="sticker-price">£5.00</div>
                         <div class="product-description">
                             High-quality vinyl stickers with Most Wanted designs. Weather-resistant and perfect for your car, laptop, or anywhere you want to show support.
                         </div>
                         <div class="product-options">
                             <div class="sticker-selector">
                                 <label>Stickers:</label>
-                                <select class="sticker-select">
-                                    <option value="1">1 Sticker</option>
-                                    <option value="2">2 Stickers</option>
-                                    <option value="3">3 Stickers</option>
+                                <select class="sticker-select" id="sticker-count" onchange="updateStickerPrice()">
+                                    <option value="1" data-price="5">1 Sticker - £5</option>
+                                    <option value="2" data-price="8">2 Stickers - £8</option>
+                                    <option value="3" data-price="10">3 Stickers - £10</option>
                                 </select>
                             </div>
                             <div class="quantity-selector">
@@ -1162,6 +1162,24 @@
         function clearCart() {
             cart = [];
             updateCart();
+        }
+
+        // Update Hoodie Price
+        function updateHoodiePrice() {
+            const styleSelect = document.getElementById('hoodie-style');
+            const priceDisplay = document.getElementById('hoodie-price');
+            const selectedOption = styleSelect.options[styleSelect.selectedIndex];
+            const price = selectedOption.getAttribute('data-price');
+            priceDisplay.textContent = `£${price}.00`;
+        }
+
+        // Update Sticker Price
+        function updateStickerPrice() {
+            const stickerSelect = document.getElementById('sticker-count');
+            const priceDisplay = document.getElementById('sticker-price');
+            const selectedOption = stickerSelect.options[stickerSelect.selectedIndex];
+            const price = selectedOption.getAttribute('data-price');
+            priceDisplay.textContent = `£${price}.00`;
         }
 
         // Remove Item from Cart
