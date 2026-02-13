@@ -77,14 +77,26 @@ function submitProfileShare(event) {
     event.preventDefault();
     
     const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
+    if (!currentUser) {
+        console.log('No current user found');
+        return;
+    }
+    
     const content = document.getElementById('profile-share-content').value.trim();
     const type = document.getElementById('profile-share-type').value;
     const includeGallery = document.getElementById('include-gallery').checked;
     const includeHeader = document.getElementById('include-header').checked;
     
-    if (!content) return;
+    if (!content) {
+        console.log('No content found');
+        return;
+    }
     
+    console.log('Submitting profile share:', { content, type, user: currentUser.name });
+    
+    // Get feed posts
     const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
+    console.log('Current feed posts count:', feedPosts.length);
     
     // Collect images to include
     const images = [];
@@ -113,8 +125,11 @@ function submitProfileShare(event) {
         profileLink: `profile-viewer.html#${currentUser.name.toLowerCase().replace(/\s+/g, '-')}`
     };
     
+    console.log('New post created:', newPost);
+    
     feedPosts.unshift(newPost);
     localStorage.setItem('mostWantedFeed', JSON.stringify(feedPosts));
+    console.log('Feed updated, total posts:', feedPosts.length);
     
     // Close modal
     document.querySelector('.modal').remove();
@@ -183,8 +198,15 @@ function initializeShareFunctionality() {
 
 // Enhanced feed loading with profile shares
 function loadEnhancedFeedPosts(filter = 'all') {
+    console.log('Loading feed posts with filter:', filter);
     const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
+    console.log('Feed posts found:', feedPosts.length);
     const feedContainer = document.getElementById('feed-posts');
+    
+    if (!feedContainer) {
+        console.log('Feed container not found');
+        return;
+    }
     
     // Sort by timestamp (newest first)
     const sortedPosts = feedPosts.sort((a, b) => b.timestamp - a.timestamp);
@@ -193,6 +215,8 @@ function loadEnhancedFeedPosts(filter = 'all') {
     const filteredPosts = filter === 'all' 
         ? sortedPosts 
         : sortedPosts.filter(post => post.type === filter);
+    
+    console.log('Filtered posts:', filteredPosts.length);
     
     if (filteredPosts.length === 0) {
         feedContainer.innerHTML = `
@@ -206,6 +230,7 @@ function loadEnhancedFeedPosts(filter = 'all') {
     }
     
     feedContainer.innerHTML = filteredPosts.map(post => createEnhancedPostHTML(post)).join('');
+    console.log('Feed posts rendered');
 }
 
 // Create enhanced post HTML with profile shares
