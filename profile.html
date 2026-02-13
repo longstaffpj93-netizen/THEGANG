@@ -400,6 +400,7 @@
             gap: 15px;
         }
     </style>
+<link rel="stylesheet" href="profile-images.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -416,9 +417,13 @@
 
     <div class="profile-container">
         <div class="profile-header">
+            <img id="profile-header-image" class="profile-header-image" style="display: none;" alt="Profile Header">
+            <div class="profile-header-overlay"></div>
+            <div class="profile-header-content">
             <div class="profile-avatar" id="profile-avatar" onclick="document.getElementById('profile-pic-input').click()">
                 <div class="avatar-text" id="avatar-text">U</div>
                 <div class="upload-overlay">
+            </div>
                     <div class="upload-icon">📷</div>
                 </div>
                 <img id="profile-pic" style="display: none;" alt="Profile Picture">
@@ -483,6 +488,56 @@
             </div>
 
             <div class="profile-section">
+<div class="profile-section">
+                <h2 class="section-title">📸 Profile Gallery</h2>
+                <div id="gallery-message"></div>
+                
+                <div class="image-upload-section">
+                    <h3>Upload Profile Images</h3>
+                    <div class="image-upload-grid">
+                        <div class="image-upload-slot" onclick="document.getElementById('profile-image-1').click()">
+                            <div class="image-upload-placeholder">
+                                <div>📷</div>
+                                <div>Image 1</div>
+                            </div>
+                            <img id="profile-image-1-preview" style="display: none;">
+                            <input type="file" id="profile-image-1" class="image-upload-input" accept="image/*" onchange="handleProfileImageUpload(event, 1)">
+                        </div>
+                        <div class="image-upload-slot" onclick="document.getElementById('profile-image-2').click()">
+                            <div class="image-upload-placeholder">
+                                <div>📷</div>
+                                <div>Image 2</div>
+                            </div>
+                            <img id="profile-image-2-preview" style="display: none;">
+                            <input type="file" id="profile-image-2" class="image-upload-input" accept="image/*" onchange="handleProfileImageUpload(event, 2)">
+                        </div>
+                        <div class="image-upload-slot" onclick="document.getElementById('profile-image-3').click()">
+                            <div class="image-upload-placeholder">
+                                <div>📷</div>
+                                <div>Image 3</div>
+                            </div>
+                            <img id="profile-image-3-preview" style="display: none;">
+                            <input type="file" id="profile-image-3" class="image-upload-input" accept="image/*" onchange="handleProfileImageUpload(event, 3)">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="header-image-upload">
+                    <h3>Header Image</h3>
+                    <div class="image-upload-slot" onclick="document.getElementById('header-image').click()" style="height: 150px;">
+                        <div class="image-upload-placeholder">
+                            <div>🖼️</div>
+                            <div>Header Image</div>
+                        </div>
+                        <img id="header-image-preview" class="header-image-preview" style="display: none;">
+                        <input type="file" id="header-image" class="image-upload-input" accept="image/*" onchange="handleHeaderImageUpload(event)">
+                    </div>
+                </div>
+                
+                <div class="profile-gallery" id="profile-gallery">
+                    <!-- Gallery images will be displayed here -->
+                </div>
+            </div>
                 <h2 class="section-title">🎨 Profile Customization</h2>
                 <div id="customization-message"></div>
                 
@@ -601,6 +656,7 @@
 
             // Load customization
             loadCustomization();
+            loadProfileImages();
 
             // Load settings
             document.getElementById('profile-name-input').value = currentUser.name;
@@ -944,6 +1000,7 @@
             color: #000;
         }
     </style>
+<link rel="stylesheet" href="profile-images.css">
 </head>
 <body>
     <div class="clean-nav">
@@ -1156,6 +1213,205 @@
             }, 3000);
         }
 
+// Profile Image Upload Functions
+
+// Handle profile image uploads
+function handleProfileImageUpload(event, imageNumber) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        showMessage('Please select an image file', 'error', 'gallery-message');
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        showMessage('Image size must be less than 5MB', 'error', 'gallery-message');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imageData = e.target.result;
+        
+        // Store in user profile
+        if (!currentUser.profile) {
+            currentUser.profile = {};
+        }
+        if (!currentUser.profile.galleryImages) {
+            currentUser.profile.galleryImages = [];
+        }
+        
+        // Ensure array has 3 elements
+        while (currentUser.profile.galleryImages.length < 3) {
+            currentUser.profile.galleryImages.push(null);
+        }
+        
+        currentUser.profile.galleryImages[imageNumber - 1] = imageData;
+        
+        // Update preview
+        const preview = document.getElementById(`profile-image-${imageNumber}-preview`);
+        const placeholder = preview.parentElement.querySelector('.image-upload-placeholder');
+        
+        preview.src = imageData;
+        preview.style.display = 'block';
+        placeholder.style.display = 'none';
+        
+        // Update gallery display
+        updateGalleryDisplay();
+        
+        // Save to database
+        updateUserInDatabase();
+        showMessage(`Image ${imageNumber} uploaded successfully!`, 'success', 'gallery-message');
+    };
+    reader.readAsDataURL(file);
+}
+
+// Handle header image upload
+function handleHeaderImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        showMessage('Please select an image file', 'error', 'gallery-message');
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        showMessage('Image size must be less than 5MB', 'error', 'gallery-message');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imageData = e.target.result;
+        
+        // Store in user profile
+        if (!currentUser.profile) {
+            currentUser.profile = {};
+        }
+        currentUser.profile.headerImage = imageData;
+        
+        // Update preview
+        const preview = document.getElementById('header-image-preview');
+        const placeholder = preview.parentElement.querySelector('.image-upload-placeholder');
+        
+        preview.src = imageData;
+        preview.style.display = 'block';
+        placeholder.style.display = 'none';
+        
+        // Update header display
+        updateHeaderDisplay();
+        
+        // Save to database
+        updateUserInDatabase();
+        showMessage('Header image uploaded successfully!', 'success', 'gallery-message');
+    };
+    reader.readAsDataURL(file);
+}
+
+// Update gallery display
+function updateGalleryDisplay() {
+    const gallery = document.getElementById('profile-gallery');
+    const images = currentUser.profile?.galleryImages || [];
+    
+    gallery.innerHTML = '';
+    
+    images.forEach((imageData, index) => {
+        if (imageData) {
+            const img = document.createElement('img');
+            img.src = imageData;
+            img.className = 'gallery-image';
+            img.alt = `Gallery Image ${index + 1}`;
+            img.onclick = () => viewImage(imageData, `Gallery Image ${index + 1}`);
+            gallery.appendChild(img);
+        }
+    });
+    
+    if (images.filter(img => img).length === 0) {
+        gallery.innerHTML = '<p style="text-align: center; color: #888;">No images uploaded yet</p>';
+    }
+}
+
+// Update header display
+function updateHeaderDisplay() {
+    const headerImage = document.getElementById('profile-header-image');
+    const headerImageData = currentUser.profile?.headerImage;
+    
+    if (headerImageData) {
+        headerImage.src = headerImageData;
+        headerImage.style.display = 'block';
+    } else {
+        headerImage.style.display = 'none';
+    }
+}
+
+// View image in full size
+function viewImage(imageData, title) {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        cursor: pointer;
+    `;
+    
+    const img = document.createElement('img');
+    img.src = imageData;
+    img.style.cssText = `
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        border-radius: 10px;
+        box-shadow: 0 0 30px rgba(255,215,0,0.5);
+    `;
+    
+    modal.appendChild(img);
+    modal.onclick = () => document.body.removeChild(modal);
+    document.body.appendChild(modal);
+}
+
+// Load existing images on profile load
+function loadProfileImages() {
+    if (!currentUser.profile) return;
+    
+    // Load header image
+    updateHeaderDisplay();
+    
+    // Load gallery images
+    updateGalleryDisplay();
+    
+    // Load previews
+    const galleryImages = currentUser.profile.galleryImages || [];
+    galleryImages.forEach((imageData, index) => {
+        if (imageData) {
+            const preview = document.getElementById(`profile-image-${index + 1}-preview`);
+            const placeholder = preview.parentElement.querySelector('.image-upload-placeholder');
+            
+            preview.src = imageData;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        }
+    });
+    
+    // Load header preview
+    const headerImageData = currentUser.profile.headerImage;
+    if (headerImageData) {
+        const headerPreview = document.getElementById('header-image-preview');
+        const headerPlaceholder = headerPreview.parentElement.querySelector('.image-upload-placeholder');
+        
+        headerPreview.src = headerImageData;
+        headerPreview.style.display = 'block';
+        headerPlaceholder.style.display = 'none';
+    }
+}
         // Handle logout
         function handleLogout() {
             localStorage.removeItem('mostWantedCurrentUser');
