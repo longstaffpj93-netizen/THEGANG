@@ -6,6 +6,7 @@
     <title>Most Wanted - My Profile</title>
     <script src="auth-check.js"></script>
     <script src="asset-manager.js"></script>
+    <script src="assets/js/bundle.js"></script>
     <style>
         body {
             margin: 0;
@@ -1145,12 +1146,15 @@
     </div>
 </body>
 </html>
+            `;
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    checkAuth();
-    loadProfile();
-});
+            // Store in localStorage
+            const profilePages = JSON.parse(localStorage.getItem('mostWantedProfilePages') || '{}');
+            profilePages[username] = profileContent;
+            localStorage.setItem('mostWantedProfilePages', JSON.stringify(profilePages));
+            
+            console.log('Profile page generated for:', username);
+        }
         
 // Initialize asset management
 initializeAssetManagement();
