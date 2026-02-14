@@ -541,9 +541,540 @@ function checkAuthentication() {
         window.location.href = 'auth.html';
         return false;
     }
-    
+
     return true;
 }
+
+// ===================================
+// IMAGE OPTIMIZATION SYSTEM
+// ===================================
+
+class ImageOptimizer {
+    constructor() {
+        this.webpSupported = this.checkWebPSupport();
+        this.init();
+    }
+
+    checkWebPSupport() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1;
+        canvas.height = 1;
+        return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    }
+
+    init() {
+        this.setupLazyLoading();
+        this.optimizeExistingImages();
+    }
+
+    setupLazyLoading() {
+        // Intersection Observer for lazy loading
+        if ('IntersectionObserver' in window) {
+            this.imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        this.loadImage(img);
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '50px 0px',
+                threshold: 0.01
+            });
+        }
+
+        // Fallback for older browsers
+        this.loadImagesOnScroll();
+    }
+
+    optimizeExistingImages() {
+        // Convert all img tags to use lazy loading
+        const images = document.querySelectorAll('img:not([data-lazy-loaded])');
+        images.forEach(img => this.prepareLazyImage(img));
+    }
+
+    prepareLazyImage(img) {
+        if (img.hasAttribute('loading') || img.hasAttribute('data-lazy-loaded')) return;
+
+        const src = img.getAttribute('src');
+        if (!src) return;
+
+        // Store original src
+        img.setAttribute('data-src', src);
+        img.setAttribute('data-lazy-loading', 'true');
+
+        // Set loading placeholder
+        if (!img.hasAttribute('alt')) {
+            img.setAttribute('alt', 'Loading image...');
+        }
+
+        // Add loading class for CSS styling
+        img.classList.add('lazy-loading');
+
+        // Remove src to prevent loading
+        img.removeAttribute('src');
+
+        // Start observing
+        if (this.imageObserver) {
+            this.imageObserver.observe(img);
+        } else {
+            // Fallback: load immediately for older browsers
+            this.loadImage(img);
+        }
+    }
+
+    loadImage(img) {
+        if (img.hasAttribute('data-lazy-loaded')) return;
+
+        const src = img.getAttribute('data-src');
+        if (!src) return;
+
+        // Create new image to preload
+        const newImg = new Image();
+
+        newImg.onload = () => {
+            img.src = src;
+            img.classList.remove('lazy-loading');
+            img.classList.add('lazy-loaded');
+            img.setAttribute('data-lazy-loaded', 'true');
+            img.removeAttribute('data-src');
+            img.removeAttribute('data-lazy-loading');
+        };
+
+        newImg.onerror = () => {
+            console.warn('Failed to load image:', src);
+            img.classList.remove('lazy-loading');
+            img.classList.add('lazy-error');
+        };
+
+        newImg.src = src;
+    }
+
+    loadImagesOnScroll() {
+        // Fallback lazy loading for browsers without Intersection Observer
+        const lazyImages = document.querySelectorAll('img[data-lazy-loading]');
+
+        const lazyLoad = () => {
+            lazyImages.forEach(img => {
+                if (this.isInViewport(img)) {
+                    this.loadImage(img);
+                }
+            });
+        };
+
+        // Throttled scroll handler
+        let scrollTimeout;
+        window.addEventListener('scroll', () => {
+            if (!scrollTimeout) {
+                scrollTimeout = setTimeout(() => {
+                    lazyLoad();
+                    scrollTimeout = null;
+                }, 16); // ~60fps
+            }
+        });
+
+        // Initial load
+        lazyLoad();
+    }
+
+    isInViewport(element) {
+        const rect = element.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+
+    // Method to convert image URLs to WebP with fallback
+    getOptimizedImageUrl(originalUrl) {
+        if (!originalUrl) return originalUrl;
+
+        // If WebP is supported, try WebP version first
+        if (this.webpSupported) {
+            // For now, keep original - in production you'd have WebP versions
+            // const webpUrl = originalUrl.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+            // return webpUrl;
+        }
+
+        return originalUrl;
+    }
+}
+
+// ===================================
+// PERFORMANCE MONITORING
+// ===================================
+
+class PerformanceMonitor {
+    constructor() {
+        this.config = PHASE3_CONFIG || {
+            PERFORMANCE_MONITORING: {
+                ENABLE_CORE_WEB_VITALS: true,
+                ENABLE_PAGE_LOAD_METRICS: true,
+                LOG_PERFORMANCE_DATA: true
+            }
+        };
+        this.init();
+    }
+
+    init() {
+        if (this.config.PERFORMANCE_MONITORING.ENABLE_CORE_WEB_VITALS) {
+            this.trackCoreWebVitals();
+        }
+
+        if (this.config.PERFORMANCE_MONITORING.ENABLE_PAGE_LOAD_METRICS) {
+            this.trackPageLoadMetrics();
+        }
+
+    createPerformanceIndicator() {
+        // Only show in development/debug mode
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+            return;
+        }
+
+        const indicator = document.createElement('div');
+        indicator.className = 'performance-indicator';
+        indicator.innerHTML = `
+            <div class="metric">LCP: <span class="value" id="lcp-value">Loading...</span></div>
+            <div class="metric">FID: <span class="value" id="fid-value">Loading...</span></div>
+            <div class="metric">CLS: <span class="value" id="cls-value">Loading...</span></div>
+            <div class="metric">Load: <span class="value" id="load-value">Loading...</span></div>
+        `;
+
+        document.body.appendChild(indicator);
+
+        // Update metrics as they become available
+        this.updatePerformanceMetrics();
+    }
+
+    updatePerformanceMetrics() {
+        // LCP
+        if ('PerformanceObserver' in window) {
+            const lcpObserver = new PerformanceObserver((list) => {
+                const entries = list.getEntries();
+                const lastEntry = entries[entries.length - 1];
+                const lcpValue = document.getElementById('lcp-value');
+                if (lcpValue) {
+                    lcpValue.textContent = Math.round(lastEntry.startTime) + 'ms';
+                }
+            });
+            lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+
+            // FID
+            const fidObserver = new PerformanceObserver((list) => {
+                const entries = list.getEntries();
+                entries.forEach(entry => {
+                    const fidValue = document.getElementById('fid-value');
+                    if (fidValue) {
+                        fidValue.textContent = Math.round(entry.processingStart - entry.startTime) + 'ms';
+                    }
+                });
+            });
+            fidObserver.observe({ entryTypes: ['first-input'] });
+
+            // CLS
+            let clsValue = 0;
+            const clsObserver = new PerformanceObserver((list) => {
+                const entries = list.getEntries();
+                entries.forEach(entry => {
+                    if (!entry.hadRecentInput) {
+                        clsValue += entry.value;
+                    }
+                });
+                const clsElement = document.getElementById('cls-value');
+                if (clsElement) {
+                    clsElement.textContent = clsValue.toFixed(4);
+                }
+            });
+            clsObserver.observe({ entryTypes: ['layout-shift'] });
+        }
+
+        // Page load time
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                const loadTime = perfData.loadEventEnd - perfData.fetchStart;
+                const loadValue = document.getElementById('load-value');
+                if (loadValue) {
+                    loadValue.textContent = Math.round(loadTime) + 'ms';
+                }
+            }, 0);
+        });
+    }
+
+    trackCoreWebVitals() {
+        // Largest Contentful Paint (LCP)
+        if ('PerformanceObserver' in window) {
+            try {
+                const lcpObserver = new PerformanceObserver((list) => {
+                    const entries = list.getEntries();
+                    const lastEntry = entries[entries.length - 1];
+                    console.log('LCP:', lastEntry.startTime);
+                });
+                lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+
+                // First Input Delay (FID)
+                const fidObserver = new PerformanceObserver((list) => {
+                    const entries = list.getEntries();
+                    entries.forEach(entry => {
+                        console.log('FID:', entry.processingStart - entry.startTime);
+                    });
+                });
+                fidObserver.observe({ entryTypes: ['first-input'] });
+
+                // Cumulative Layout Shift (CLS)
+                let clsValue = 0;
+                const clsObserver = new PerformanceObserver((list) => {
+                    const entries = list.getEntries();
+                    entries.forEach(entry => {
+                        if (!entry.hadRecentInput) {
+                            clsValue += entry.value;
+                        }
+                    });
+                    console.log('CLS:', clsValue);
+                });
+                clsObserver.observe({ entryTypes: ['layout-shift'] });
+
+            } catch (e) {
+                console.warn('Performance monitoring not fully supported:', e);
+            }
+        }
+    }
+
+    trackPageLoadMetrics() {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                console.log('Page Load Metrics:', {
+                    domContentLoaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+                    loadComplete: perfData.loadEventEnd - perfData.loadEventStart,
+                    totalTime: perfData.loadEventEnd - perfData.fetchStart
+                });
+            }, 0);
+        });
+    }
+}
+
+// ===================================
+// SERVICE WORKER MANAGEMENT
+// ===================================
+
+class ServiceWorkerManager {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                this.registerServiceWorker();
+            });
+        }
+    }
+
+    async registerServiceWorker() {
+        try {
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('Service Worker registered:', registration.scope);
+
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                if (newWorker) {
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            this.showUpdateNotification();
+                        }
+                    });
+                }
+            });
+
+        } catch (error) {
+            console.log('Service Worker registration failed:', error);
+        }
+    }
+
+    showUpdateNotification() {
+        // Create update notification
+        const notification = document.createElement('div');
+        notification.className = 'update-notification';
+        notification.innerHTML = `
+            <div class="update-content">
+                <span>🎉 App updated! Refresh to get the latest features.</span>
+                <button class="update-btn" onclick="window.location.reload()">Refresh</button>
+            </div>
+        `;
+        document.body.appendChild(notification);
+
+        // Auto-hide after 10 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 10000);
+    }
+}
+
+// ===================================
+// ANALYTICS INTEGRATION
+// ===================================
+
+class AnalyticsManager {
+    constructor() {
+        this.config = PHASE3_CONFIG || {
+            GOOGLE_ANALYTICS_ID: null,
+            FEATURES: { ANALYTICS: false }
+        };
+        this.init();
+    }
+
+    init() {
+        if (this.config.FEATURES.ANALYTICS && this.config.GOOGLE_ANALYTICS_ID) {
+            this.loadGoogleAnalytics();
+            this.trackPageViews();
+            this.trackUserInteractions();
+        } else {
+            console.log('Analytics not enabled - configure GOOGLE_ANALYTICS_ID in phase3-config.js');
+        }
+    }
+
+    loadGoogleAnalytics() {
+        const gaId = this.config.GOOGLE_ANALYTICS_ID;
+
+        if (!gaId) {
+            console.log('Google Analytics ID not configured');
+            return;
+        }
+
+        // Load GA4 script
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        document.head.appendChild(script);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', gaId);
+
+        console.log('Google Analytics loaded with ID:', gaId);
+    }
+
+    trackPageViews() {
+        // Track page views (GA4 does this automatically when configured)
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+                page_title: document.title,
+                page_location: window.location.href
+            });
+        }
+    }
+
+    trackUserInteractions() {
+        // Track button clicks
+        document.addEventListener('click', (e) => {
+            const button = e.target.closest('button, .nav-btn, .action-btn');
+            if (button && typeof gtag !== 'undefined') {
+                gtag('event', 'click', {
+                    event_category: 'engagement',
+                    event_label: button.textContent || button.className
+                });
+            }
+        });
+
+        // Track form submissions
+        document.addEventListener('submit', (e) => {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'form_submit', {
+                    event_category: 'engagement',
+                    event_label: e.target.id || 'form'
+                });
+            }
+        });
+    }
+}
+
+// ===================================
+// PWA FEATURES
+// ===================================
+
+class PWAManager {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.setupInstallPrompt();
+        this.registerManifest();
+    }
+
+    setupInstallPrompt() {
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            // Show install button
+            this.showInstallButton(deferredPrompt);
+        });
+
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA installed successfully');
+            deferredPrompt = null;
+        });
+    }
+
+    showInstallButton(deferredPrompt) {
+        const installBtn = document.createElement('button');
+        installBtn.className = 'install-btn';
+        installBtn.innerHTML = '📱 Install App';
+        installBtn.onclick = async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log('Install outcome:', outcome);
+                deferredPrompt = null;
+                installBtn.remove();
+            }
+        };
+
+        // Add to navigation or as floating button
+        const nav = document.querySelector('.clean-nav');
+        if (nav) {
+            nav.appendChild(installBtn);
+        }
+
+        // Auto-hide after 30 seconds
+        setTimeout(() => {
+            if (installBtn.parentNode) {
+                installBtn.remove();
+            }
+        }, 30000);
+    }
+
+    registerManifest() {
+        // Check if manifest exists
+        const manifestLink = document.querySelector('link[rel="manifest"]');
+        if (manifestLink) {
+            console.log('PWA manifest registered');
+        } else {
+            console.log('PWA manifest not found');
+        }
+    }
+}
+
+// ===================================
+// INITIALIZE OPTIMIZATIONS
+// ===================================
+
+// Initialize all Phase 3 optimizations
+const imageOptimizer = new ImageOptimizer();
+const performanceMonitor = new PerformanceMonitor();
+const serviceWorkerManager = new ServiceWorkerManager();
+const analyticsManager = new AnalyticsManager();
+const pwaManager = new PWAManager();
 
 // Run authentication check
 checkAuthentication();

@@ -1,0 +1,92 @@
+{
+  "name": "THE GANG - Car Community",
+  "short_name": "THE GANG",
+  "description": "Essex's premier car enthusiast community - connect, share, and drive with fellow petrolheads",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#ffd700",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-GB",
+  "dir": "ltr",
+  "categories": ["lifestyle", "social", "automotive"],
+  "icons": [
+    {
+      "src": "/assets/images/THE_GANG_logo.png",
+      "sizes": "450x450",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/images/THE_GANG_logo.png",
+      "sizes": "450x450",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/images/THE_GANG_logo.png",
+      "sizes": "450x450",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "THE GANG Community Feed"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Community Feed",
+      "short_name": "Feed",
+      "description": "Share and view community posts",
+      "url": "/feed.html",
+      "icons": [
+        {
+          "src": "/assets/images/THE_GANG_logo.png",
+          "sizes": "450x450"
+        }
+      ]
+    },
+    {
+      "name": "Car Meets",
+      "short_name": "Meets",
+      "description": "Find upcoming car meets",
+      "url": "/car-meets.html",
+      "icons": [
+        {
+          "src": "/assets/images/THE_GANG_logo.png",
+          "sizes": "450x450"
+        }
+      ]
+    },
+    {
+      "name": "Team",
+      "short_name": "Team",
+      "description": "Meet the team members",
+      "url": "/team.html",
+      "icons": [
+        {
+          "src": "/assets/images/THE_GANG_logo.png",
+          "sizes": "450x450"
+        }
+      ]
+    },
+    {
+      "name": "Merchandise",
+      "short_name": "Merch",
+      "description": "Shop official merchandise",
+      "url": "/merch.html",
+      "icons": [
+        {
+          "src": "/assets/images/THE_GANG_logo.png",
+          "sizes": "450x450"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
