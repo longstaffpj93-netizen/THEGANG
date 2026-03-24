@@ -3,153 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Essex Car Meets</title>
-    <link rel="manifest" href="/manifest.json">
-    <script src="auth-check.js"></script>
-    <script src="assets/js/phase3-config.js"></script>
-    <script src="assets/js/bundle.js"></script>
-    <link rel="stylesheet" href="assets/css/main.css">
+    <title>THE GANG | Car Meets</title>
+    
+    <!-- Core Scripts -->
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/layout.js"></script>
+    <script src="assets/js/meets.js"></script>
+    
+    <!-- Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #020617; }
+        .carbon-bg {
+            background-image: radial-gradient(circle at 2px 2px, rgba(245,158,11,0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
 </head>
+<body class="carbon-bg min-h-screen text-slate-100 pb-20">
 
-<div class="container">
-
-    <!-- Hero: Video Background -->
-    <div class="hero">
-        <video autoplay muted playsinline class="hero-video">
-            <source src="assets/videos/generated_video.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-                Your browser does not support the video tag.
-            </video>
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        
+        <!-- Header -->
+        <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <h1 class="text-5xl md:text-6xl font-black italic uppercase tracking-tighter leading-none mb-2">The <span class="text-amber-500">Meets</span></h1>
+                <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]">Official Essex Car Community Manifest</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 px-6 py-4 rounded-3xl flex items-center gap-4">
+                <span class="text-xs text-slate-500 font-bold uppercase tracking-widest leading-none">Status</span>
+                <span class="bg-green-500/10 text-green-500 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest leading-none border border-green-500/20">All Spots Online</span>
+            </div>
         </div>
 
-        <div class="intro">
-            <p>Welcome to <strong>THE GANG</strong> — Essex's premier car enthusiast community. We bring together petrolheads from across the county for epic meets, cruises, and vibes. All makes, models, and styles welcome — modified, classic, JDM, supercars, you name it.</p>
-            <p>Check out our lineup for the next couple of months (Feb–April 2026). Dates subject to weather/organiser updates — follow our socials for last-minute changes, cancellations, or extra pop-ups.</p>
+        <div class="intro mb-20 max-w-2xl bg-slate-950/50 p-8 rounded-[2rem] border border-slate-800/50">
+            <p class="text-slate-400 text-sm leading-relaxed italic">
+                Bringing together petrolheads from across the county for epic meets, cruises, and vibes. 
+                All makes, models, and styles welcome — modified, classic, JDM, supercars, you name it.
+            </p>
         </div>
 
-        <div class="meets-grid">
-
-            <!-- Original + adjusted for current date (11 Feb 2026) -->
-            <div class="meet-card">
-                <div class="meet-date">FRI 13 FEB 2026</div>
-                <h2 class="meet-title">Chelmsford Friday Night</h2>
-                <div class="meet-location">📍 Riverside Retail Park, Chelmsford</div>
-                <div class="meet-time">⏰ 8:00 PM – 11:00 PM</div>
-                <div class="meet-details">
-                    Weekly Friday night hangout for the Chelmsford crew. Relaxed vibes, quality motors, coffee, and late-night chats. Perfect kick-off after mid-week.
-                </div>
-            </div>
-
-            <div class="meet-card">
-                <div class="meet-date">SAT 14 FEB 2026</div>
-                <h2 class="meet-title">Lakeside Valentine's Meet</h2>
-                <div class="meet-location">📍 Lakeside Shopping Centre Car Park, West Thurrock</div>
-                <div class="meet-time">⏰ 6:00 PM – 10:00 PM</div>
-                <div class="meet-details">
-                    Special Valentine's edition of our biggest monthly spot. Bring your ride (and maybe your other half). Food vendors, music, and good energy expected.
-                </div>
-            </div>
-
-            <div class="meet-card">
-                <div class="meet-date">SUN 15 FEB 2026</div>
-                <h2 class="meet-title">Southend Seafront Sunday</h2>
-                <div class="meet-location">📍 Southend-on-Sea Seafront, Marine Parade</div>
-                <div class="meet-time">⏰ 10:00 AM – 2:00 PM</div>
-                <div class="meet-details">
-                    Classic Sunday cruise along the seafront. Epic photo ops with the pier and estuary backdrop. Clean rides shine here.
-                </div>
-            </div>
-
-            <!-- New/expanded meets for Feb–April -->
-            <div class="meet-card">
-                <div class="meet-date">FRI 20 FEB 2026</div>
-                <h2 class="meet-title">Chelmsford Friday Night</h2>
-                <div class="meet-location">📍 Riverside Retail Park, Chelmsford</div>
-                <div class="meet-time">⏰ 8:00 PM – 11:00 PM</div>
-                <div class="meet-details">
-                    Another weekly Chelmsford session — consistent spot for the locals. Come show off recent mods or just chill.
-                </div>
-            </div>
-
-            <div class="meet-card">
-                <div class="meet-date">SAT 21 FEB 2026</div>
-                <h2 class="meet-title">Colchester Castle Cruise</h2>
-                <div class="meet-location">📍 Colchester Castle Park, Castle Park</div>
-                <div class="meet-time">⏰ 12:00 PM – 4:00 PM</div>
-                <div class="meet-details">
-                    Daytime family-friendly meet in historic grounds. Static displays, scenic cruise around North Essex roads.
-                </div>
-            </div>
-
-            <div class="meet-card">
-                <div class="meet-date">SUN 01 MAR 2026</div>
-                <h2 class="meet-title">ECM Season Opener @ Chelmsford City Racecourse</h2>
-                <div class="meet-location">📍 Chelmsford City Racecourse</div>
-                <div class="meet-time">⏰ 10:00 AM – 4:00 PM</div>
-                <div class="meet-details">
-                    Big season kick-off event! Massive turnout expected — trade stands, special guests, track views, and proper Essex energy.
-                </div>
-            </div>
-
-            <div class="meet-card">
-                <div class="meet-date">SAT 07 MAR 2026</div>
-                <h2 class="meet-title">Basildon Mega Meet</h2>
-                <div class="meet-location">📍 Festival Leisure Park, Basildon</div>
-                <div class="meet-time">⏰ 6:00 PM – 11:00 PM</div>
-                <div class="meet-details">
-                    Monthly legend returns. DJ, competitions, giveaways, huge turnout. First Saturday vibes.
-                </div>
-            </div>
-
-            <div class="meet-card">
-                <div class="meet-date">SUN 22 MAR 2026</div>
-                <h2 class="meet-title">Lodge Coaches Car Show & Autojumble</h2>
-                <div class="meet-location">📍 Lodge Coaches, Essex (check socials for exact)</div>
-                <div class="meet-time">⏰ 10:00 AM – 2:00 PM</div>
-                <div class="meet-details">
-                    Classic show with autojumble — parts, bargains, and static displays. Great for builders and browsers.
-                </div>
-            </div>
-
-            <div class="meet-card">
-                <div class="meet-date">FRI 03 APR 2026</div>
-                <h2 class="meet-title">Epping Forest Night Run</h2>
-                <div class="meet-location">📍 High Beach Car Park, Epping Forest</div>
-                <div class="meet-time">⏰ 7:00 PM – 10:00 PM</div>
-                <div class="meet-details">
-                    Evening cruise through the forest roads. Meet at High Beach, then scenic drive. Wrap up with food/coffee.
-                </div>
-            </div>
-
-            <div class="meet-card">
-                <div class="meet-date">SAT 04 APR 2026</div>
-                <h2 class="meet-title">Lakeside April Meet</h2>
-                <div class="meet-location">📍 Lakeside Shopping Centre Car Park, West Thurrock</div>
-                <div class="meet-time">⏰ 6:00 PM – 10:00 PM</div>
-                <div class="meet-details">
-                    Spring edition of the iconic Lakeside gathering. Warmer nights, bigger crowds, all welcome.
-                </div>
-            </div>
-
+        <!-- Meets Grid -->
+        <div id="meets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+            <!-- Meets injected here -->
         </div>
-    </div>
 
-    <div class="footer">
-        <p>THE GANG — Bringing Essex car culture together since day one.</p>
-        <p>Follow for real-time updates, weather calls & surprise pop-up meets.</p>
-        <p style="margin-top: 25px; font-size: 0.9em;">
-            Webpage by PJ Longstaff | Run by Courbon Longstaff
-        </p>
-        <!-- Bottom Clean Navigation -->
-        <div class="clean-nav bottom">
-            <a href="index.html" class="nav-btn">🏠 Home</a>
-            <a href="car-meets.html" class="nav-btn">🚗 Car Meets</a>
-            <a href="merch.html" class="nav-btn">🛍️ Merch</a>
-            <a href="team.html" class="nav-btn">👥 Team</a>\n        <a href="feed.html" class="nav-btn">📢 Feed</a>
-            \n        
-        </div>
-    </div>
+    </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => Meets.init());
+    </script>
 </body>
 </html>

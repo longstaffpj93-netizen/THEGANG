@@ -3,360 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Most Wanted - Community Feed</title>
-    <link rel="manifest" href="/manifest.json">
-    <script src="auth-check.js"></script>
-    <script src="assets/js/phase3-config.js"></script>
-    <script src="assets/js/bundle.js"></script>
-    <link rel="stylesheet" href="assets/css/main.css">
+    <title>THE GANG | Community Feed</title>
+    
+    <!-- Core Scripts -->
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/layout.js"></script>
+    <script src="assets/js/feed.js"></script>
+    
+    <!-- Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #020617; }
+        .carbon-bg {
+            background-image: radial-gradient(circle at 2px 2px, rgba(245,158,11,0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
 </head>
-<body>
-    <div class="feed-container">
-        <div class="feed-header">
-            <h1 class="feed-title">📢 Community Feed</h1>
-            <p class="feed-subtitle">Share your Most Wanted moments with the community</p>
-            <button class="share-to-feed-btn" onclick="openShareModal()">📝 Share to Feed</button>
+<body class="carbon-bg min-h-screen text-slate-100 pb-20">
+
+    <main class="max-w-3xl mx-auto px-6 py-12">
+        
+        <!-- Header -->
+        <div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <h1 class="text-4xl font-black italic uppercase tracking-tighter leading-none mb-2">The <span class="text-amber-500">Feed</span></h1>
+                <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]">Live Community Transmissions</p>
+            </div>
+            <button onclick="toggleModal('share-modal')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-6 py-3 rounded-2xl text-[10px] uppercase tracking-widest shadow-lg transform active:scale-95 transition-all">Create Post</button>
         </div>
 
-        <div class="feed-filters">
-            <button class="filter-btn active" onclick="filterPosts('all')">All Posts</button>
-            <button class="filter-btn" onclick="filterPosts('cars')">🚗 Cars</button>
-            <button class="filter-btn" onclick="filterPosts('meets')">📍 Meets</button>
-            <button class="filter-btn" onclick="filterPosts('profiles')">👤 Profiles</button>
-            <button class="filter-btn" onclick="filterPosts('merch')">🛍️ Merch</button>
+        <!-- Filters -->
+        <div class="flex items-center gap-3 mb-12 overflow-x-auto pb-4 no-scrollbar">
+            <button onclick="Feed.renderPosts('all')" class="bg-slate-900 border border-slate-800 px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:border-amber-500 transition-colors">All</button>
+            <button onclick="Feed.renderPosts('cars')" class="bg-slate-900 border border-slate-800 px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:border-amber-500 transition-colors">🚗 Cars</button>
+            <button onclick="Feed.renderPosts('meets')" class="bg-slate-900 border border-slate-800 px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:border-amber-500 transition-colors">📍 Meets</button>
+            <button onclick="Feed.renderPosts('profiles')" class="bg-slate-900 border border-slate-800 px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:border-amber-500 transition-colors">👤 Pilots</button>
         </div>
 
-        <div class="feed-posts" id="feed-posts">
-            <div class="loading">Loading feed...</div>
+        <!-- Posts Container -->
+        <div id="feed-posts" class="space-y-8">
+            <div class="flex items-center justify-center py-20">
+                <div class="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
         </div>
-    </div>
+
+    </main>
 
     <!-- Share Modal -->
-    <div class="modal" id="share-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Share to Feed</h2>
-                <button class="modal-close" onclick="closeShareModal()">×</button>
+    <div id="share-modal" class="fixed inset-0 z-[100] hidden bg-slate-950/80 backdrop-blur-xl flex items-center justify-center p-6">
+        <div class="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black italic uppercase tracking-tighter">New Transmission</h2>
+                <button onclick="toggleModal('share-modal')" class="text-slate-500 hover:text-white">✕</button>
             </div>
-            <form class="share-form" onsubmit="shareToFeed(event)">
-                <div class="form-group">
-                    <label for="share-content">What's on your mind?</label>
-                    <textarea id="share-content" placeholder="Share your Most Wanted moment..." required></textarea>
+            
+            <form id="post-form" onsubmit="handlePost(event)" class="space-y-6">
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">Post Content</label>
+                    <textarea id="post-content" required class="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-sm text-white focus:border-amber-500 transition-all outline-none min-h-[150px] resize-none" placeholder="What's happening in Essex?"></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="share-type">Post Type</label>
-                    <select id="share-type">
-                        <option value="general">General</option>
+                
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 block">Category</label>
+                    <select id="post-type" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs font-bold text-white outline-none focus:border-amber-500 transition-all appearance-none cursor-pointer">
+                        <option value="general">📢 General</option>
                         <option value="cars">🚗 Cars</option>
                         <option value="meets">📍 Meets</option>
-                        <option value="profiles">👤 Profiles</option>
-                        <option value="merch">🛍️ Merch</option>
+                        <option value="profiles">👤 Pilot Profile</option>
                     </select>
                 </div>
-                <button type="submit" class="share-btn">Share to Feed</button>
+                
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-5 rounded-2xl text-[10px] uppercase tracking-widest shadow-lg transition-all active:scale-95">Send Broadcast</button>
             </form>
         </div>
     </div>
 
-    <script src="feed-functions.js"></script>\n    <script>
-        // Initialize feed database
-        function initializeFeedDatabase() {
-            if (!localStorage.getItem('mostWantedFeed')) {
-                localStorage.setItem('mostWantedFeed', JSON.stringify([]));
-            }
+    <script>
+        document.addEventListener('DOMContentLoaded', () => Feed.init());
+
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden');
         }
 
-        // Load feed posts
-        function loadFeedPosts(filter = 'all') {
-            console.log('Loading feed posts with filter:', filter);
-            const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
-            console.log('Feed posts found:', feedPosts.length);
-            const feedContainer = document.getElementById('feed-posts');
+        function handlePost(e) {
+            e.preventDefault();
+            const content = document.getElementById('post-content').value;
+            const type = document.getElementById('post-type').value;
             
-            if (!feedContainer) {
-                console.log('Feed container not found');
-                return;
-            }
-            
-            // Sort by timestamp (newest first)
-            const sortedPosts = feedPosts.sort((a, b) => b.timestamp - a.timestamp);
-            
-            // Filter posts
-            const filteredPosts = filter === 'all' 
-                ? sortedPosts 
-                : sortedPosts.filter(post => post.type === filter);
-            
-            console.log('Filtered posts:', filteredPosts.length);
-            
-            if (filteredPosts.length === 0) {
-                feedContainer.innerHTML = `
-                    <div class="empty-feed">
-                        <div class="empty-feed-icon">📢</div>
-                        <div class="empty-feed-text">No posts yet</div>
-                        <div class="empty-feed-subtext">Be the first to share with the Most Wanted community!</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            feedContainer.innerHTML = filteredPosts.map(post => createPostHTML(post)).join('');
-            console.log('Feed posts rendered using loadFeedPosts');
-        }
-
-        // Create post HTML
-        function createPostHTML(post) {
-            const date = new Date(post.timestamp);
-            const timeAgo = getTimeAgo(date);
-            
-            return `
-                <div class="feed-post" data-post-id="${post.id}">
-                    <div class="post-type-badge">${getTypeEmoji(post.type)} ${post.type.charAt(0).toUpperCase() + post.type.slice(1)}</div>
-                    <div class="post-header">
-                        <div class="post-avatar">
-                            ${post.authorProfilePic ? 
-                                `<img src="${post.authorProfilePic}" alt="${post.authorName}">` : 
-                                post.authorName.charAt(0).toUpperCase()
-                            }
-                        </div>
-                        <div class="post-meta">
-                            <div class="post-author">${post.authorName}</div>
-                            <div class="post-time">${timeAgo}</div>
-                        </div>
-                    </div>
-                    <div class="post-content">${post.content}</div>
-                    ${post.images && post.images.length > 0 ? `
-                        <div class="post-images">
-                            ${post.images.map(image => 
-                                `<img src="${image}" class="post-image" onclick="viewImage('${image}')" alt="Post image">`
-                            ).join('')}
-                        </div>
-                    ` : ''}
-                    <div class="post-actions">
-                        <div class="post-actions-left">
-                            <button class="post-action-btn ${post.liked ? 'liked' : ''}" onclick="toggleLike('${post.id}')">
-                                <span>${post.liked ? '❤️' : '🤍'}</span>
-                                <span>${post.likes || 0}</span>
-                            </button>
-                            <button class="post-action-btn" onclick="viewPost('${post.id}')">
-                                <span>💬</span>
-                                <span>${post.comments || 0}</span>
-                            </button>
-                        </div>
-                        <button class="post-action-btn" onclick="sharePost('${post.id}')">
-                            <span>🔗</span>
-                            <span>Share</span>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Get time ago string
-        function getTimeAgo(date) {
-            const seconds = Math.floor((Date.now() - date) / 1000);
-            
-            if (seconds < 60) return 'just now';
-            if (seconds < 3600) return Math.floor(seconds / 60) + ' minutes ago';
-            if (seconds < 86400) return Math.floor(seconds / 3600) + ' hours ago';
-            if (seconds < 604800) return Math.floor(seconds / 86400) + ' days ago';
-            return date.toLocaleDateString();
-        }
-
-        // Get type emoji
-        function getTypeEmoji(type) {
-            const emojis = {
-                'general': '📢',
-                'cars': '🚗',
-                'meets': '📍',
-                'profiles': '👤',
-                'merch': '🛍️'
-            };
-            return emojis[type] || '📢';
-        }
-
-        // Filter posts
-        function filterPosts(type) {
-            // Update active filter button
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            loadEnhancedFeedPosts(type);
-        }
-
-        // Open share modal
-        function openShareModal() {
-            document.getElementById('share-modal').style.display = 'flex';
-        }
-
-        // Close share modal
-        function closeShareModal() {
-            document.getElementById('share-modal').style.display = 'none';
-            document.getElementById('share-content').value = '';
-            document.getElementById('share-type').value = 'general';
-        }
-
-        // Share to feed
-        function shareToFeed(event) {
-            event.preventDefault();
-            
-            console.log('Feed share initiated');
-            const currentUser = JSON.parse(localStorage.getItem('mostWantedCurrentUser'));
-            if (!currentUser) {
-                console.log('No current user found for feed share');
-                alert('Please login to share to feed');
-                return;
-            }
-            
-            console.log('Current user for feed share:', currentUser.name);
-            const content = document.getElementById('share-content').value.trim();
-            const type = document.getElementById('share-type').value;
-            
-            console.log('Feed share data:', { content, type });
-            
-            if (!content) {
-                console.log('No content provided for feed share');
-                return;
-            }
-            
-            const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
-            console.log('Current feed posts count:', feedPosts.length);
-            
-            const newPost = {
-                id: Date.now().toString(),
-                authorId: currentUser.id,
-                authorName: currentUser.name,
-                authorProfilePic: currentUser.profile?.profilePic || null,
-                content: content,
-                type: type,
-                images: currentUser.profile?.galleryImages?.slice(0, 3) || [],
-                timestamp: Date.now(),
-                likes: 0,
-                comments: 0,
-                liked: false
-            };
-            
-            console.log('New feed post created:', newPost);
-            
-            feedPosts.unshift(newPost);
-            localStorage.setItem('mostWantedFeed', JSON.stringify(feedPosts));
-            console.log('Feed updated, total posts:', feedPosts.length);
-            console.log('Feed saved to localStorage with key: mostWantedFeed');
-            console.log('Feed data size:', JSON.stringify(feedPosts).length, 'characters');
-            
-            // Verify feed was saved
-            const savedFeed = localStorage.getItem('mostWantedFeed');
-            console.log('Feed verification - saved data exists:', !!savedFeed);
-            console.log('Feed verification - saved data length:', savedFeed ? savedFeed.length : 0);
-            
-            closeShareModal();
-            loadEnhancedFeedPosts();
-            
-            // Show success message
-            const feedContainer = document.getElementById('feed-posts');
-            const successMessage = document.createElement('div');
-            successMessage.style.cssText = `
-                background: rgba(0,255,0,0.2);
-                border: 1px solid #44ff44;
-                color: #66ff66;
-                padding: 15px;
-                border-radius: 10px;
-                margin-bottom: 20px;
-                text-align: center;
-                font-weight: bold;
-            `;
-            successMessage.textContent = 'Post shared successfully!';
-            feedContainer.insertBefore(successMessage, feedContainer.firstChild);
-            
-            setTimeout(() => {
-                if (successMessage.parentNode) {
-                    successMessage.parentNode.removeChild(successMessage);
-                }
-            }, 3000);
-        }
-
-        // Toggle like
-        function toggleLike(postId) {
-            const feedPosts = JSON.parse(localStorage.getItem('mostWantedFeed') || '[]');
-            const post = feedPosts.find(p => p.id === postId);
-            
-            if (post) {
-                post.liked = !post.liked;
-                post.likes = post.liked ? (post.likes || 0) + 1 : Math.max(0, (post.likes || 0) - 1);
-                
-                localStorage.setItem('mostWantedFeed', JSON.stringify(feedPosts));
-                loadEnhancedFeedPosts();
-            }
-        }
-
-        // View image
-        function viewImage(imageSrc) {
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0,0,0,0.9);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-                cursor: pointer;
-            `;
-            
-            const img = document.createElement('img');
-            img.src = imageSrc;
-            img.style.cssText = `
-                max-width: 90%;
-                max-height: 90%;
-                object-fit: contain;
-                border-radius: 10px;
-                box-shadow: 0 0 30px rgba(255,215,0,0.5);
-            `;
-            
-            modal.appendChild(img);
-            modal.onclick = () => document.body.removeChild(modal);
-            document.body.appendChild(modal);
-        }
-
-        // View post (placeholder for future comments)
-        function viewPost(postId) {
-            alert('Comments feature coming soon!');
-        }
-
-        // Share post (placeholder for future sharing)
-        function sharePost(postId) {
-            alert('Share feature coming soon!');
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeFeedDatabase();
-            verifyFeedPersistence();
-            loadEnhancedFeedPosts();
-        });
-        
-        // Verify feed persistence across users
-        function verifyFeedPersistence() {
-            const feedData = localStorage.getItem('mostWantedFeed');
-            console.log('=== FEED PERSISTENCE CHECK (feed.html) ===');
-            console.log('Feed data exists:', !!feedData);
-            console.log('Feed data length:', feedData ? feedData.length : 0);
-            
-            if (feedData) {
-                try {
-                    const parsedFeed = JSON.parse(feedData);
-                    console.log('Parsed feed posts:', parsedFeed.length);
-                    console.log('Feed authors:', parsedFeed.map(post => post.authorName));
-                    console.log('Feed timestamps:', parsedFeed.map(post => new Date(post.timestamp).toLocaleString()));
-                } catch (e) {
-                    console.error('Error parsing feed data:', e);
-                }
-            }
-            console.log('=== END FEED PERSISTENCE CHECK (feed.html) ===');
+            Feed.sharePost(content, type);
+            toggleModal('share-modal');
+            document.getElementById('post-form').reset();
         }
     </script>
 </body>

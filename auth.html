@@ -3,254 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Most Wanted - Login / Sign Up</title>
-    <link rel="manifest" href="/manifest.json">
-    <script src="auth-check.js"></script>
-    <script src="profile-generator.js"></script>
-    <script src="assets/js/phase3-config.js"></script>
-    <script src="assets/js/bundle.js"></script>
-    <link rel="stylesheet" href="assets/css/main.css">
+    <title>THE GANG | Authentication</title>
+    
+    <!-- Core Scripts -->
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/layout.js"></script>
+    
+    <!-- Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #020617; }
+        .carbon-bg {
+            background-image: radial-gradient(circle at 2px 2px, rgba(245,158,11,0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .animate-drift {
+            animation: drift 20s linear infinite;
+        }
+        @keyframes drift {
+            from { background-position: 0 0; }
+            to { background-position: 500px 500px; }
+        }
+    </style>
 </head>
-<body>
-    <div class="auth-container">
-        <div class="auth-header">
-            <h1>Most Wanted</h1>
-            <p>Join the Essex Car Community</p>
+<body class="carbon-bg min-h-screen flex items-center justify-center p-6">
+
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+        
+        <!-- Tab Switching -->
+        <div class="flex items-center gap-4 mb-10 bg-slate-950 p-1 rounded-2xl border border-slate-800">
+            <button onclick="switchTab('login')" id="tab-login" class="flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all bg-amber-500 text-slate-950 shadow-lg">Login</button>
+            <button onclick="switchTab('signup')" id="tab-signup" class="flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all text-slate-500 hover:text-white">Sign Up</button>
         </div>
 
-        <div class="auth-tabs">
-            <button class="auth-tab active" onclick="switchTab('login')">Login</button>
-            <button class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+        <div class="mb-8">
+            <h2 id="auth-title" class="text-2xl font-black text-white italic uppercase tracking-tighter">Welcome Back</h2>
+            <p class="text-slate-500 text-xs font-bold tracking-widest mt-1 uppercase">Essex's Premier Car Community</p>
         </div>
 
         <!-- Login Form -->
-        <div id="login-form" class="auth-form active">
-            <div class="error-message" id="login-error"></div>
-            <div class="success-message" id="login-success"></div>
-            
-            <div class="form-group">
-                <label for="login-email">Email</label>
-                <input type="email" id="login-email" placeholder="Enter your email" required>
+        <div id="login-form" class="space-y-4">
+            <div>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 block">Email Address</label>
+                <input type="email" id="login-email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-4 text-sm text-white focus:border-amber-500 transition-all outline-none" placeholder="driver@thegang.co.uk">
             </div>
-            
-            <div class="form-group">
-                <label for="login-password">Password</label>
-                <input type="password" id="login-password" placeholder="Enter your password" required>
+            <div>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 block">Password</label>
+                <input type="password" id="login-password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-4 text-sm text-white focus:border-amber-500 transition-all outline-none" placeholder="••••••••">
             </div>
-            
-            <button class="auth-btn" onclick="handleLogin()">Login</button>
+            <button onclick="handleLogin()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-5 rounded-2xl shadow-[0_10px_30px_rgba(245,158,11,0.2)] transition-all transform active:scale-95 text-xs uppercase tracking-widest mt-6">Engage Profile</button>
         </div>
 
-        <!-- Sign Up Form -->
-        <div id="signup-form" class="auth-form">
-            <div class="error-message" id="signup-error"></div>
-            <div class="success-message" id="signup-success"></div>
-            
-            <div class="form-group">
-                <label for="signup-name">Full Name</label>
-                <input type="text" id="signup-name" placeholder="Enter your full name" required>
+        <!-- Signup Form (Hidden) -->
+        <div id="signup-form" class="hidden space-y-4">
+            <div>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 block">Full Name</label>
+                <input type="text" id="signup-name" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-4 text-sm text-white focus:border-amber-500 transition-all outline-none" placeholder="Vin Diesel">
             </div>
-            
-            <div class="form-group">
-                <label for="signup-email">Email</label>
-                <input type="email" id="signup-email" placeholder="Enter your email" required>
+            <div>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 block">Email Address</label>
+                <input type="email" id="signup-email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-4 text-sm text-white focus:border-amber-500 transition-all outline-none" placeholder="driver@thegang.co.uk">
             </div>
-            
-            <div class="form-group">
-                <label for="signup-password">Password</label>
-                <input type="password" id="signup-password" placeholder="Create a password" required>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 block">Password</label>
+                    <input type="password" id="signup-password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-4 text-sm text-white focus:border-amber-500 transition-all outline-none" placeholder="••••••••">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 block">Confirm</label>
+                    <input type="password" id="signup-confirm-password" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-4 text-sm text-white focus:border-amber-500 transition-all outline-none" placeholder="••••••••">
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="signup-confirm-password">Confirm Password</label>
-                <input type="password" id="signup-confirm-password" placeholder="Confirm your password" required>
+            <div>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-2 block">Car Model (Optional)</label>
+                <input type="text" id="signup-car" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-4 text-sm text-white focus:border-amber-500 transition-all outline-none" placeholder="BMW M3, etc.">
             </div>
-            
-            <div class="form-group">
-                <label for="signup-car">Car Details (Optional)</label>
-                <input type="text" id="signup-car" placeholder="Make, Model, Year">
-            </div>
-            
-            <button class="auth-btn" onclick="handleSignup()">Sign Up</button>
+            <button onclick="handleSignup()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-5 rounded-2xl shadow-[0_10px_30px_rgba(245,158,11,0.2)] transition-all transform active:scale-95 text-xs uppercase tracking-widest mt-6">Create Pilot ID</button>
         </div>
 
-        <div class="back-to-site">
-            <a href="index.html">← Back to Most Wanted</a>
+        <div class="mt-8 text-center">
+            <a href="index.html" class="text-[10px] text-slate-600 font-black uppercase tracking-widest hover:text-slate-400 transition-colors">← Back to Dashboard</a>
         </div>
     </div>
 
+    <!-- Decorative Elements -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 rounded-full blur-[120px] -z-10 animate-pulse"></div>
+
     <script>
-        // Initialize database (localStorage for demo)
-        function initializeDatabase() {
-            if (!localStorage.getItem('mostWantedUsers')) {
-                localStorage.setItem('mostWantedUsers', JSON.stringify([]));
-            }
-        }
-
-        // Switch between login and signup tabs
         function switchTab(tab) {
-            const tabs = document.querySelectorAll('.auth-tab');
-            const forms = document.querySelectorAll('.auth-form');
-            
-            tabs.forEach(t => t.classList.remove('active'));
-            forms.forEach(f => f.classList.remove('active'));
-            
+            const loginBtn = document.getElementById('tab-login');
+            const signupBtn = document.getElementById('tab-signup');
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const title = document.getElementById('auth-title');
+
             if (tab === 'login') {
-                tabs[0].classList.add('active');
-                document.getElementById('login-form').classList.add('active');
+                loginBtn.className = 'flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all bg-amber-500 text-slate-950 shadow-lg';
+                signupBtn.className = 'flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all text-slate-500 hover:text-white';
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                title.innerText = "Welcome Back";
             } else {
-                tabs[1].classList.add('active');
-                document.getElementById('signup-form').classList.add('active');
+                signupBtn.className = 'flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all bg-amber-500 text-slate-950 shadow-lg';
+                loginBtn.className = 'flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all text-slate-500 hover:text-white';
+                signupForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                title.innerText = "Join the Gang";
             }
         }
 
-        // Handle user signup
+        function handleLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) return UI.toast("Missing Credentials", "error");
+
+            const users = DB.get(DB.USERS);
+            const user = users.find(u => u.email === email && u.password === btoa(password));
+
+            if (user) {
+                localStorage.setItem(DB.CURRENT_USER, JSON.stringify(user));
+                UI.toast("Welcome back, Pilot", "success");
+                setTimeout(() => window.location.href = 'feed.html', 1000);
+            } else {
+                UI.toast("Invalid Identity", "error");
+            }
+        }
+
         function handleSignup() {
             const name = document.getElementById('signup-name').value.trim();
             const email = document.getElementById('signup-email').value.trim();
             const password = document.getElementById('signup-password').value;
-            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            const confirm = document.getElementById('signup-confirm-password').value;
             const car = document.getElementById('signup-car').value.trim();
-            
-            const errorDiv = document.getElementById('signup-error');
-            const successDiv = document.getElementById('signup-success');
-            
-            // Clear previous messages
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-            
-            // Validation
-            if (!name || !email || !password || !confirmPassword) {
-                errorDiv.textContent = 'Please fill in all required fields';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            if (password.length < 6) {
-                errorDiv.textContent = 'Password must be at least 6 characters long';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                errorDiv.textContent = 'Passwords do not match';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            if (!validateEmail(email)) {
-                errorDiv.textContent = 'Please enter a valid email address';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            // Check if user already exists
-            const users = JSON.parse(localStorage.getItem('mostWantedUsers') || '[]');
-            if (users.find(user => user.email === email)) {
-                errorDiv.textContent = 'An account with this email already exists';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            // Create new user
+
+            if (!name || !email || !password) return UI.toast("Details Required", "error");
+            if (password !== confirm) return UI.toast("Passwords Desynced", "error");
+            if (password.length < 6) return UI.toast("Password too short", "error");
+
+            const users = DB.get(DB.USERS);
+            if (users.find(u => u.email === email)) return UI.toast("ID Already Exists", "error");
+
             const newUser = {
                 id: Date.now().toString(),
-                name: name,
-                email: email,
-                password: btoa(password), // Basic encoding (not secure for production)
-                car: car,
-                joinDate: new Date().toISOString(),
+                name,
+                email,
+                password: btoa(password),
+                car,
                 profile: {
-                    bio: '',
-                    favoriteMeets: [],
-                    cars: car ? [car] : []
+                    bio: 'Most Wanted Pilot',
+                    cars: car ? [car] : [],
+                    gallery: []
                 }
             };
-            
+
             users.push(newUser);
-            localStorage.setItem('mostWantedUsers', JSON.stringify(users));
-            
-            // Create user's profile page
-            if (typeof generateProfilePage === 'function') {
-                const profileContent = generateProfilePage(newUser);
-                const username = newUser.name.toLowerCase().replace(/\s+/g, '-');
-                const profilePages = JSON.parse(localStorage.getItem('mostWantedProfilePages') || '{}');
-                profilePages[username] = profileContent;
-                localStorage.setItem('mostWantedProfilePages', JSON.stringify(profilePages));
-                console.log('Profile page created for new user:', username);
-            }
-            
-            successDiv.textContent = 'Account created successfully! You can now login.';
-            successDiv.style.display = 'block';
-            
-            // Clear form
-            document.getElementById('signup-name').value = '';
-            document.getElementById('signup-email').value = '';
-            document.getElementById('signup-password').value = '';
-            document.getElementById('signup-confirm-password').value = '';
-            document.getElementById('signup-car').value = '';
-            
-            // Switch to login tab after 2 seconds
-            setTimeout(() => {
-                switchTab('login');
-            }, 2000);
+            DB.save(DB.USERS, users);
+            UI.toast("Pilot ID Created", "success");
+            setTimeout(() => switchTab('login'), 1500);
         }
-
-        // Handle user login
-        function handleLogin() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-            
-            const errorDiv = document.getElementById('login-error');
-            const successDiv = document.getElementById('login-success');
-            
-            // Clear previous messages
-            errorDiv.style.display = 'none';
-            successDiv.style.display = 'none';
-            
-            // Validation
-            if (!email || !password) {
-                errorDiv.textContent = 'Please enter both email and password';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            // Check user credentials
-            const users = JSON.parse(localStorage.getItem('mostWantedUsers') || '[]');
-            const user = users.find(u => u.email === email && u.password === btoa(password));
-            
-            if (user) {
-                // Store current user session
-                localStorage.setItem('mostWantedCurrentUser', JSON.stringify(user));
-                
-                successDiv.textContent = 'Login successful! Redirecting...';
-                successDiv.style.display = 'block';
-                
-                // Redirect to profile page after 1.5 seconds
-                setTimeout(() => {
-                    window.location.href = 'profile.html';
-                }, 1500);
-            } else {
-                errorDiv.textContent = 'Invalid email or password';
-                errorDiv.style.display = 'block';
-            }
-        }
-
-        // Email validation helper
-        function validateEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeDatabase();
-            
-            // If user is already logged in, redirect to feed
-            if (isAuthenticated()) {
-                window.location.href = 'feed.html';
-            }
-        });
     </script>
 </body>
 </html>

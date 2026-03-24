@@ -3,67 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE GANG - Essex Car Community</title>
-    <link rel="manifest" href="/manifest.json">
-    <script src="auth-check.js"></script>
-    <script src="assets/js/phase3-config.js"></script>
-    <script src="assets/js/bundle.js"></script>
-    <link rel="stylesheet" href="assets/css/main.css">
+    <title>THE GANG | Essex Car Community</title>
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Core Scripts -->
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/layout.js"></script>
+    
+    <!-- Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #020617; }
+        .carbon-bg {
+            background-image: radial-gradient(circle at 2px 2px, rgba(245,158,11,0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .animate-drift {
+            animation: drift 20s linear infinite;
+        }
+        @keyframes drift {
+            from { background-position: 0 0; }
+            to { background-position: 500px 500px; }
+        }
+    </style>
 </head>
-<body>
-    <div class="redirect-container">
-        <h1>🚗 Most Wanted</h1>
-        <p>Essex's Premier Car Community</p>
-        <div class="countdown" id="countdown">Please login to continue</div>
-        <div class="features">
-            <div class="feature">
-                <span class="feature-icon">�</span>
-                <span class="feature-text">Private Community</span>
-            </div>
-            <div class="feature">
-                <span class="feature-icon">�</span>
-                <span class="feature-text">Member Profiles</span>
-            </div>
-            <div class="feature">
-                <span class="feature-icon">�</span>
-                <span class="feature-text">Community Feed</span>
-            </div>
-            <div class="feature">
-                <span class="feature-icon">�️</span>
-                <span class="feature-text">Official Merch</span>
+<body class="carbon-bg min-h-screen flex items-center justify-center overflow-hidden">
+
+    <div class="relative z-10 text-center px-6">
+        <div class="mb-12 flex flex-col items-center">
+            <h1 class="text-6xl md:text-8xl font-black text-amber-500 italic tracking-tighter uppercase leading-none mb-2 drop-shadow-[0_0_30px_rgba(245,158,11,0.5)]">THE GANG</h1>
+            <span class="text-xs md:text-sm text-slate-500 uppercase tracking-[0.5em] font-bold">Essex Car Community</span>
+        </div>
+
+        <div id="status-container" class="space-y-6">
+            <p id="countdown" class="text-slate-400 font-bold tracking-widest text-sm uppercase">Initializing Driver Profile...</p>
+            
+            <div class="w-64 h-1 bg-slate-900 rounded-full mx-auto overflow-hidden">
+                <div id="progress-bar" class="w-0 h-full bg-amber-500 transition-all duration-300"></div>
             </div>
         </div>
     </div>
-    
+
+    <!-- Decorative Elements -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 rounded-full blur-[120px] -z-10 animate-pulse"></div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // If user is already logged in, redirect to feed
-            if (isAuthenticated()) {
-                window.location.href = 'feed.html';
+            const progressBar = document.getElementById('progress-bar');
+            const countdownText = document.getElementById('countdown');
+            
+            // Redirect Logic
+            if (DB.getCurrentUser()) {
+                setTimeout(() => window.location.href = 'feed.html', 1500);
             } else {
-                // Show countdown and redirect to auth
-                startCountdown();
-                setTimeout(() => {
-                    window.location.href = 'auth.html';
-                }, 6000);
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 2;
+                    progressBar.style.width = `${progress}%`;
+                    
+                    if (progress === 40) countdownText.innerText = "AUTHENTICATING...";
+                    if (progress === 70) countdownText.innerText = "LOADING ENGINE ASSETS...";
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        window.location.href = 'auth.html';
+                    }
+                }, 40);
             }
         });
-        
-        // Start countdown
-        function startCountdown() {
-            let countdown = 5;
-            const countdownEl = document.getElementById('countdown');
-            
-            const timer = setInterval(() => {
-                countdown--;
-                countdownEl.textContent = countdown;
-                
-                if (countdown <= 0) {
-                    clearInterval(timer);
-                    countdownEl.textContent = 'Redirecting to login...';
-                }
-            }, 1000);
-        }
     </script>
 </body>
 </html>

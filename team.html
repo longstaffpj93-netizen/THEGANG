@@ -3,145 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE GANG - Meet the Team</title>
-    <link rel="manifest" href="/manifest.json">
-    <script src="auth-check.js"></script>
-    <script src="assets/js/phase3-config.js"></script>
-    <script src="assets/js/bundle.js"></script>
-    <link rel="stylesheet" href="assets/css/main.css">
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin: 0 8px;
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .clean-nav .nav-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .clean-nav .nav-btn:hover::before {
-            left: 100%;
-        }
-
-        .clean-nav .nav-btn:hover {
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            color: #000;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(255,215,0,0.4);
-            border-color: #fff;
-        }
-
-        .clean-nav .nav-btn:active {
-            transform: translateY(-1px);
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes dropDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px) scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+    <title>THE GANG | The Crew</title>
+    
+    <!-- Core Scripts -->
+    <script src="assets/js/core.js"></script>
+    <script src="assets/js/layout.js"></script>
+    
+    <!-- Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #020617; }
+        .carbon-bg {
+            background-image: radial-gradient(circle at 2px 2px, rgba(245,158,11,0.05) 1px, transparent 0);
+            background-size: 24px 24px;
         }
     </style>
 </head>
-<body>
+<body class="carbon-bg min-h-screen text-slate-100 pb-20">
 
-    <!-- Hero: Video Background -->
-    <div class="hero">
-        <video autoplay muted playsinline class="hero-video">
-            <source src="assets/videos/generated_video.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
-
-    <div class="hero-small">
-        <h1>MEET THE TEAM</h1>
-    </div>
-
-    <div class="container">
-        <div class="team-grid">
-            <!-- Team Member Profile -->
-            <div class="member">
-                <div class="photo-placeholder">
-                    <a href="profile-viewer.html" class="profile-link" id="team-profile-link">
-                        <div class="profile-icon" id="team-profile-pic">
-                            <span class="profile-initial" id="team-profile-initial">PJ</span>
-                            <img id="team-profile-image" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="PJ Longstaff">
-                        </div>
-                        <div class="profile-overlay">
-                            <span>View Profile</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="name">PJ Longstaff</div>
-                <div class="role">Web & Media</div>
-                <p>Founder and lead developer of Most Wanted. Building the Essex car community platform and creating professional content for car enthusiasts across the county.</p>
+    <main class="max-w-7xl mx-auto px-6 py-12">
+        
+        <!-- Header -->
+        <div class="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+                <h1 class="text-5xl md:text-6xl font-black italic uppercase tracking-tighter leading-none mb-2">The <span class="text-amber-500">Crew</span></h1>
+                <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]">Command & Control Center</p>
             </div>
         </div>
-    </div>
 
-    <script>
-        // Load team member profile picture if available
-        function loadTeamProfilePic() {
-            const currentUser = localStorage.getItem('mostWantedCurrentUser');
-            if (currentUser) {
-                const user = JSON.parse(currentUser);
-                if (user.profile?.profilePic && user.name === 'PJ Longstaff') {
-                    const profileImage = document.getElementById('team-profile-image');
-                    const profileInitial = document.getElementById('team-profile-initial');
-                    const profileLink = document.getElementById('team-profile-link');
+        <!-- Team Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+            
+            <!-- Member: PJ -->
+            <div class="bg-slate-900 border-2 border-amber-500 rounded-[3rem] p-10 shadow-2xl relative overflow-hidden group hover:scale-[1.02] transition-all">
+                <div class="relative z-10 flex flex-col items-center text-center">
+                    <div class="w-32 h-32 rounded-full bg-amber-500 border-4 border-slate-900 flex items-center justify-center text-3xl font-black text-slate-950 mb-6 shadow-2xl relative overflow-hidden">
+                        PJ
+                        <!-- Add profile pic logic here if desired -->
+                    </div>
+                    <h2 class="text-3xl font-black italic uppercase tracking-tighter text-white mb-2">PJ Longstaff</h2>
+                    <span class="bg-amber-500/10 text-amber-500 border border-amber-500/20 px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest mb-6">Founder • Web & Media</span>
                     
-                    profileImage.src = user.profile.profilePic;
-                    profileImage.style.display = 'block';
-                    profileInitial.style.display = 'none';
+                    <p class="text-slate-400 text-xs leading-relaxed italic mb-8">
+                        Founder and lead developer of Most Wanted. Building the Essex car community platform and creating professional content for car enthusiasts across the county.
+                    </p>
                     
-                    // Update link to specific profile
-                    const username = user.name.toLowerCase().replace(/\s+/g, '-');
-                    profileLink.href = `profile-viewer.html#${username}`;
-                }
-            }
-        }
+                    <a href="profile.html" class="w-full bg-slate-950 hover:bg-amber-500 hover:text-slate-950 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-widest transition-all border border-slate-800">View Active File</a>
+                </div>
+                <!-- Decorative Pattern -->
+                <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rotate-45 translate-x-16 -translate-y-16 group-hover:bg-amber-500/10 transition-colors"></div>
+            </div>
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadTeamProfilePic();
-        });
-    </script>
+            <!-- Future Member Placeholder -->
+            <div class="bg-slate-900/50 border border-slate-800 border-dashed rounded-[3rem] p-10 flex flex-col items-center justify-center text-center opacity-50">
+                <div class="w-20 h-20 rounded-full border-2 border-slate-800 border-dashed flex items-center justify-center text-2xl mb-6">
+                    👤
+                </div>
+                <h3 class="text-lg font-black italic uppercase tracking-tighter text-slate-600 mb-2">Recruiting...</h3>
+                <p class="text-slate-700 text-[10px] font-bold uppercase tracking-widest">Sector Elite Only</p>
+            </div>
 
+        </div>
+
+    </main>
+
+</body>
 </html>
